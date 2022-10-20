@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Now or Never</string>
+    <string name="now_or_never">Now or Never</string>
+    <string name="web_service">Web Service</string>
 </resources>
