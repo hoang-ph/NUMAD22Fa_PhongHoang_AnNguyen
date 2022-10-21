@@ -3,7 +3,11 @@ package edu.northeastern.nowornever;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,7 +33,11 @@ public class WebServiceActivity extends AppCompatActivity {
     private IFreeToGame api;
     private Button searchButton;
     private RecyclerView recyclerView;
+    private Spinner platformSpinner;
+    private Spinner sortBySpinner;
+    private Spinner genreSpinner;
 
+    private String genre, sortBy, platform;
     private List<Game> games;
 
     @Override
@@ -38,6 +46,60 @@ public class WebServiceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_service);
         searchButton = findViewById(R.id.searchButton);
+
+        // Platform Spinner
+        platformSpinner = findViewById(R.id.platformSpinner);
+        ArrayAdapter<CharSequence> platformAdapter = ArrayAdapter.createFromResource(this,R.array.platform_array, android.R.layout.simple_spinner_dropdown_item);
+        platformAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        platformSpinner.setAdapter(platformAdapter);
+        platformSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                platform = adapterView.getItemAtPosition(i).toString();
+                Log.d(TAG, "Platform onItemSelected: " + platform);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        // Sort_by Spinner
+        sortBySpinner = findViewById(R.id.sortBySpinner);
+        ArrayAdapter<CharSequence> sortByAdapter = ArrayAdapter.createFromResource(this,R.array.sort_by_array, android.R.layout.simple_spinner_dropdown_item);
+        sortByAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sortBySpinner.setAdapter(sortByAdapter);
+        sortBySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                sortBy = adapterView.getItemAtPosition(i).toString();
+                Log.d(TAG, "Sort-by onItemSelected: " + sortBy);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        // Genre Spinner
+        genreSpinner = findViewById(R.id.genreSpinner);
+        ArrayAdapter<CharSequence> genreAdapter = ArrayAdapter.createFromResource(this,R.array.genre_array, android.R.layout.simple_spinner_dropdown_item);
+        genreAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        genreSpinner.setAdapter(genreAdapter);
+        genreSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                genre = adapterView.getItemAtPosition(i).toString();
+                Log.d(TAG, "Genre onItemSelected: " + genre);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         // Recycler View for the list of games
         games = new ArrayList<>();
@@ -59,7 +121,24 @@ public class WebServiceActivity extends AppCompatActivity {
     }
 
     private void search() {
-        Call<List<Game>> call = api.getGames();
+        // clear the recycler view before each call
+        games.clear();
+
+        Call<List<Game>> call;
+        if (platform.equals("All") && genre.equals("All")) {
+            // get all the games
+            call = api.getGames(sortBy);
+        } else if (platform.equals("All")) {
+            // get games by genre
+            call = api.getGamesByGenre(genre, sortBy);
+        } else if (genre.equals("All")) {
+            // get games by platform
+            call = api.getGamesByPlatform(platform, sortBy);
+        } else {
+            // get games by platform & genre
+            call = api.getGamesByPlatformAndGenre(platform, genre, sortBy);
+        }
+        Log.d(TAG, "_onCall: " + call.request().url());
         call.enqueue(new Callback<List<Game>>() {
             @Override
             public void onResponse(Call<List<Game>> call, Response<List<Game>> response) {
@@ -110,6 +189,7 @@ public class WebServiceActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<Game>> call, Throwable t) {
                 Log.d(TAG, "_onFailure: " + t.getMessage());
+                Toast.makeText(WebServiceActivity.this, "Failed to fetch the data", Toast.LENGTH_SHORT).show();
             }
         });
     }

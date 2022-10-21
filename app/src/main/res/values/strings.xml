@@ -4,5 +4,38 @@
     <string name="web_service">Web Service</string>
     <string name="search">Search</string>
     <string name="title">Title</string>
-    <string name="description">Description</string>
+    <string name="description">Description:</string>
+    <string name="genre">Genre:</string>
+    <string name="platform">Platform:</string>
+    <string name="publisher">Publisher:</string>
+    <string name="developer">Developer:</string>
+    <string name="release_date">Release Date:</string>
+    <string name="sort_by">Sort by:</string>
+    <string-array name="platform_array">
+        <item>All</item>
+        <item>pc</item>
+        <item>browser</item>
+    </string-array>
+    <string-array name="genre_array">
+        <item>All</item>
+        <item>mmorpg</item>
+        <item>shooter</item>
+        <item>strategy</item>
+        <item>moba</item>
+        <item>racing</item>
+        <item>mmo</item>
+        <item>first-person</item>
+        <item>battle-royale</item>
+        <item>survival</item>
+        <item>pvp</item>
+        <item>pve</item>
+        <item>zombie</item>
+        <item>open-world</item>
+        <item>superhero</item>
+    </string-array>
+    <string-array name="sort_by_array">
+        <item>alphabetical</item>
+        <item>popularity</item>
+        <item>release-date</item>
+    </string-array>
 </resources>

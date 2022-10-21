@@ -34,7 +34,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(@NonNull GameViewHolder holder, int position) {
         holder.titleText.setText(games.get(position).getTitle());
-        holder.descriptionText.setText(games.get(position).getShortDescription());
+        String description = context.getString(R.string.description) + " " + games.get(position).getShortDescription();
+        holder.descriptionText.setText(description);
+        String genre = context.getString(R.string.genre) + " " + games.get(position).getGenre();
+        holder.genreText.setText(genre);
+        String platform = context.getString(R.string.platform) + " " + games.get(position).getPlatform();
+        holder.platformText.setText(platform);
+        String developer = context.getString(R.string.developer) + " " + games.get(position).getDeveloper();
+        holder.developerText.setText(developer);
+        String publisher = context.getString(R.string.publisher) + " " + games.get(position).getPublisher();
+        holder.publisherText.setText(publisher);
+        String releaseDate = context.getString(R.string.release_date) + " " + games.get(position).getReleaseDate();
+        holder.releaseDateText.setText(releaseDate);
     }
 
     @Override
@@ -44,12 +55,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     public class GameViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView titleText, descriptionText;
+        private TextView titleText, descriptionText, genreText, platformText, developerText, publisherText, releaseDateText;
 
         public GameViewHolder(@NonNull View itemView) {
             super(itemView);
             titleText = itemView.findViewById(R.id.titleTextView);
             descriptionText = itemView.findViewById(R.id.descriptionTextView);
+            genreText = itemView.findViewById(R.id.genreTextView);
+            platformText = itemView.findViewById(R.id.platformTextView);
+            developerText = itemView.findViewById(R.id.developerTextView);
+            publisherText = itemView.findViewById(R.id.publisherTextView);
+            releaseDateText = itemView.findViewById(R.id.releaseDateTextView);
         }
     }
 }
