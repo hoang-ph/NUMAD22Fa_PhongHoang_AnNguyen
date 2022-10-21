@@ -7,11 +7,15 @@ import android.widget.Button;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.northeastern.nowornever.model.Game;
 import edu.northeastern.nowornever.model.IFreeToGame;
+import edu.northeastern.nowornever.webservice.RecyclerViewAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -22,8 +26,11 @@ public class WebServiceActivity extends AppCompatActivity {
     private static final String TAG = "WebServiceActivity";
 
     private Retrofit retrofit;
-    private Button searchButton;
     private IFreeToGame api;
+    private Button searchButton;
+    private RecyclerView recyclerView;
+
+    private List<Game> games;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -31,6 +38,13 @@ public class WebServiceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_service);
         searchButton = findViewById(R.id.searchButton);
+
+        // Recycler View for the list of games
+        games = new ArrayList<>();
+        recyclerView = findViewById(R.id.recyclerView);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, games);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         searchButton.setOnClickListener(view -> {
             search();
@@ -49,15 +63,15 @@ public class WebServiceActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<Game>>() {
             @Override
             public void onResponse(Call<List<Game>> call, Response<List<Game>> response) {
-                if(!response.isSuccessful()){
+                if (!response.isSuccessful()) {
                     Log.d(TAG, "_Call failed!" + response.code());
                     return;
                 }
 
                 Log.d(TAG, "_Call Successed!");
-                List<Game> games = response.body();
-                for(Game game : games){
-                    StringBuffer  str = new StringBuffer();
+                List<Game> result = response.body();
+                for (Game game : result) {
+                    StringBuffer str = new StringBuffer();
                     str.append("_Code: ")
                             .append(response.code())
                             .append("\n")
@@ -86,7 +100,11 @@ public class WebServiceActivity extends AppCompatActivity {
                             .append(game.getReleaseDate())
                             .append("\n");
                     Log.d(TAG, str.toString());
+                    games.add(new Game(game.getId(), game.getTitle(), game.getShortDescription(),
+                            game.getGenre(), game.getPlatform(), game.getPublisher(),
+                            game.getDeveloper(), game.getReleaseDate()));
                 }
+                recyclerView.getAdapter().notifyDataSetChanged();
             }
 
             @Override

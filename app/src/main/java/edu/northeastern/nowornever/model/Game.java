@@ -14,6 +14,17 @@ public class Game {
     @SerializedName("release_date")
     private String releaseDate;
 
+    public Game(int id, String title, String shortDescription, String genre, String platform, String publisher, String developer, String releaseDate) {
+        this.id = id;
+        this.title = title;
+        this.shortDescription = shortDescription;
+        this.genre = genre;
+        this.platform = platform;
+        this.publisher = publisher;
+        this.developer = developer;
+        this.releaseDate = releaseDate;
+    }
+
     public int getId() {
         return id;
     }
