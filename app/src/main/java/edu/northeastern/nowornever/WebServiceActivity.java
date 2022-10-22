@@ -5,8 +5,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -31,7 +33,11 @@ public class WebServiceActivity extends AppCompatActivity {
 
     private Retrofit retrofit;
     private IFreeToGame api;
-    private Button searchButton;
+
+    private FrameLayout searchButton;
+    private ProgressBar progressBar;
+    private TextView loadBtnText;
+
     private RecyclerView recyclerView;
     private Spinner platformSpinner;
     private Spinner sortBySpinner;
@@ -46,6 +52,8 @@ public class WebServiceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_service);
         searchButton = findViewById(R.id.searchButton);
+        progressBar = findViewById(R.id.progressBar);
+        loadBtnText = findViewById(R.id.loadBtnText);
 
         // Platform Spinner
         platformSpinner = findViewById(R.id.platformSpinner);
@@ -108,9 +116,7 @@ public class WebServiceActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        searchButton.setOnClickListener(view -> {
-            search();
-        });
+        searchButton.setOnClickListener(view -> search());
 
         // Retrofit
         retrofit = new Retrofit.Builder()
@@ -121,6 +127,9 @@ public class WebServiceActivity extends AppCompatActivity {
     }
 
     private void search() {
+        progressBar.setVisibility(View.VISIBLE);
+        loadBtnText.setVisibility(View.GONE);
+
         // clear the recycler view before each call
         games.clear();
 
@@ -142,12 +151,15 @@ public class WebServiceActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<Game>>() {
             @Override
             public void onResponse(Call<List<Game>> call, Response<List<Game>> response) {
+                progressBar.setVisibility(View.INVISIBLE);
+                loadBtnText.setVisibility(View.VISIBLE);
+
                 if (!response.isSuccessful()) {
                     Log.d(TAG, "_Call failed!" + response.code());
                     return;
                 }
 
-                Log.d(TAG, "_Call Successed!");
+                Log.d(TAG, "_Call Succeed!");
                 List<Game> result = response.body();
                 for (Game game : result) {
                     StringBuffer str = new StringBuffer();
