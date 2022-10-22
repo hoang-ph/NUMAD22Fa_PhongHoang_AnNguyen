@@ -11,6 +11,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,7 +30,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class WebServiceActivity extends AppCompatActivity {
-    private static final String TAG = "WebServiceActivity";
+    private static final String TAG = "WebServiceActivity", STATE_LIST = "state_list";
 
     private Retrofit retrofit;
     private IFreeToGame api;
@@ -44,7 +45,7 @@ public class WebServiceActivity extends AppCompatActivity {
     private Spinner genreSpinner;
 
     private String genre, sortBy, platform;
-    private List<Game> games;
+    ArrayList<Game> games;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -124,6 +125,12 @@ public class WebServiceActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         api = retrofit.create(IFreeToGame.class);
+
+        if (savedInstanceState != null) {
+            ArrayList<Game> tempList = savedInstanceState.getParcelableArrayList(STATE_LIST);
+            games.addAll(tempList);
+            recyclerView.getAdapter().notifyDataSetChanged();
+        }
     }
 
     private void search() {
@@ -204,5 +211,11 @@ public class WebServiceActivity extends AppCompatActivity {
                 Toast.makeText(WebServiceActivity.this, "Failed to fetch the data", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(STATE_LIST, games);
     }
 }
