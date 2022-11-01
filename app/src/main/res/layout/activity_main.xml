@@ -10,11 +10,14 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
         android:text="@string/now_or_never"
-        app:layout_constraintBottom_toTopOf="@id/webServiceButton"
+        app:layout_constraintBottom_toTopOf="@+id/webServiceButton"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <Button
         android:id="@+id/webServiceButton"
@@ -22,10 +25,22 @@
         android:layout_height="wrap_content"
         android:onClick="showWebServiceActivity"
         android:text="@string/web_service"
+        app:layout_constraintBottom_toTopOf="@+id/stickerMessagingButton"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <Button
+        android:id="@+id/stickerMessagingButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="showStickerMessagingActivity"
+        android:text="@string/sticker_messaging"
         app:layout_constraintBottom_toBottomOf="parent"
-        />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/webServiceButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

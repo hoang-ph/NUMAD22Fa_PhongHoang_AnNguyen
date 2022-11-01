@@ -25,6 +25,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".WebServiceActivity" />
+        <activity android:name=".StickerMessagingActivity" />
     </application>
 
 </manifest>

@@ -17,4 +17,8 @@ public class MainActivity extends AppCompatActivity {
     public void showWebServiceActivity(View view) {
         startActivity(new Intent(this, WebServiceActivity.class));
     }
+
+    public void showStickerMessagingActivity(View view) {
+        startActivity(new Intent(this, WebServiceActivity.class));
+    }
 }
