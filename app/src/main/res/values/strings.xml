@@ -44,4 +44,11 @@
 
     <!--- LogInActivity -->
     <string name="username_hint">Your username</string>
+
+    <!--- StickerMessagingActivity -->
+    <string name="send_sticker">Send Sticker</string>
+    <string name="sticker_display">Recent received sticker</string>
+    <string name="username_inquiry">Receiver\'s username</string>
+    <string name="about">About</string>
+
 </resources>
