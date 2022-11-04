@@ -44,6 +44,7 @@
 
     <!--- LogInActivity -->
     <string name="username_hint">Your username</string>
+    <string name="login">Log In</string>
 
     <!--- StickerMessagingActivity -->
     <string name="send_sticker">Send Sticker</string>
