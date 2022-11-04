@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "810133547674",
+    "project_id": "now-or-never-c7d3a",
+    "storage_bucket": "now-or-never-c7d3a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:810133547674:android:6cabe8377c6a40e6068d23",
+        "android_client_info": {
+          "package_name": "edu.northeastern.nowornever"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "810133547674-6lac7upn4na7qm27area17agaj5a55vj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDesM3yjrUcmGeykJrGDHYjeDtN7Pvobqs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "810133547674-6lac7upn4na7qm27area17agaj5a55vj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
