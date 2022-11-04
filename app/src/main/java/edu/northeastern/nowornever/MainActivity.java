@@ -19,6 +19,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showStickerMessagingActivity(View view) {
-        startActivity(new Intent(this, StickerMessagingActivity.class));
+        startActivity(new Intent(this, SimpleLogInActivity.class));
     }
 }

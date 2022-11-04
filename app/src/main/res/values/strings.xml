@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Now or Never</string>
     <string name="now_or_never">Now or Never</string>
+
+    <!--- WebServiceActivity -->
     <string name="web_service">Web Service</string>
     <string name="search">Search</string>
     <string name="title">Title</string>
@@ -39,4 +41,7 @@
         <item>popularity</item>
         <item>release-date</item>
     </string-array>
+
+    <!--- LogInActivity -->
+    <string name="username_hint">Your username</string>
 </resources>
