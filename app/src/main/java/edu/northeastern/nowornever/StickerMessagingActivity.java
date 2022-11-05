@@ -19,6 +19,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +36,7 @@ public class StickerMessagingActivity extends AppCompatActivity {
     private String username;
     private EditText receiverUsername;
     private RadioButton sticker;
-    private List<Sticker> tempList;
+    private List<Sticker> tempList = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -94,42 +96,42 @@ public class StickerMessagingActivity extends AppCompatActivity {
             return;
         }
 
-//        // Read first
-//        ref.child("users").child(receiver).child("receivedStickers").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e(TAG, "Error getting data", task.getException());
-//                    tempList = new ArrayList<>();
-//                } else {
-//                    Log.d(TAG, String.valueOf(task.getResult().getValue()));
-//                    tempList = (List<Sticker>) task.getResult().getValue();
-//                }
-//            }
-//        });
-//
+        // Read first
+        ref.child("users").child(receiver).child("receivedStickers").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                GenericTypeIndicator<List<Sticker>> t = new GenericTypeIndicator<List<Sticker>>() {};
+                tempList = snapshot.getValue(t);
+                Log.e(TAG, "onDataChange: snapshot = " + snapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e(TAG, "onCancelled:" + error);
+                Toast.makeText(getApplicationContext()
+                        , "DBError: " + error, Toast.LENGTH_SHORT).show();
+            }
+        });
+
         // Add to list
-        Sticker tempSticker = new Sticker(checkStickerType(), StickerMessagingActivity.this.username);
-        tempList = new ArrayList<>();
+        Sticker tempSticker = new Sticker(checkStickerType(), this.username);
         tempList.add(tempSticker);
 
         // Then write
-        ref.child("users").child(receiver).child("receivedStickers").setValue(tempList)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(getApplicationContext()
-                                , "Sticker sent successfully!", Toast.LENGTH_SHORT).show();
-                    }
-                })
+        ref.child("users").child(receiver).child("receivedStickers").setValue(tempList).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(getApplicationContext()
+                        , "Sticker sent successfully!", Toast.LENGTH_SHORT).show();
+            }
+        })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(getApplicationContext()
                                 , "Failed to send sticker!", Toast.LENGTH_SHORT).show();
                     }
-                });
-
+                });;
     }
 
     private String checkStickerType() {
