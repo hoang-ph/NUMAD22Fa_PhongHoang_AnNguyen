@@ -12,15 +12,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.MutableData;
-import com.google.firebase.database.Transaction;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import edu.northeastern.nowornever.model.sticker.Sticker;
 import edu.northeastern.nowornever.model.sticker.User;
@@ -28,11 +29,12 @@ import edu.northeastern.nowornever.model.sticker.User;
 public class StickerMessagingActivity extends AppCompatActivity {
     private static final String TAG = StickerMessagingActivity.class.getSimpleName();
 
-    private FirebaseDatabase database;
+    private DatabaseReference ref;
     private TextView usernameView, recentReceivedStickerView;
     private String username;
     private EditText receiverUsername;
     private RadioButton sticker;
+    private List<Sticker> tempList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,9 +49,9 @@ public class StickerMessagingActivity extends AppCompatActivity {
         receiverUsername = findViewById(R.id.receiverUsername);
         sticker = findViewById(R.id.sticker1);
 
-        database = FirebaseDatabase.getInstance();
+        ref = FirebaseDatabase.getInstance().getReference();
 
-        database.getReference().child("users").addChildEventListener(new ChildEventListener() {
+        ref.child("users").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 showMostRecent(snapshot);
@@ -81,58 +83,53 @@ public class StickerMessagingActivity extends AppCompatActivity {
         });
 
         // TODO: extra logics for existing user and data -> refactor this for received stickers
-        User user = new User(this.username, new ArrayList<>());
-        database.getReference().child("users").child(user.username).setValue(user);
-
+        User user = new User(this.username);
+        ref.child("users").child(user.username).setValue(user);
     }
 
     public void sendSticker(View view) {
-        StickerMessagingActivity.this.onSend(database.getReference());
-    }
-
-    private void onSend(DatabaseReference reference) {
         String receiver = receiverUsername.getText().toString();
         if (receiver.matches("") || receiver.equals(this.username)) {
             Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
             return;
         }
-        // TODO: check if user exist in database
-        // if (reference.child("user").child(receiver).get)
 
-        reference.child("users").child(receiver).runTransaction(new Transaction.Handler() {
-            @NonNull
-            @Override
-            public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+//        // Read first
+//        ref.child("users").child(receiver).child("receivedStickers").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                if (!task.isSuccessful()) {
+//                    Log.e(TAG, "Error getting data", task.getException());
+//                    tempList = new ArrayList<>();
+//                } else {
+//                    Log.d(TAG, String.valueOf(task.getResult().getValue()));
+//                    tempList = (List<Sticker>) task.getResult().getValue();
+//                }
+//            }
+//        });
+//
+        // Add to list
+        Sticker tempSticker = new Sticker(checkStickerType(), StickerMessagingActivity.this.username);
+        tempList = new ArrayList<>();
+        tempList.add(tempSticker);
 
-                User user = mutableData.getValue(User.class);
+        // Then write
+        ref.child("users").child(receiver).child("receivedStickers").setValue(tempList)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(getApplicationContext()
+                                , "Sticker sent successfully!", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getApplicationContext()
+                                , "Failed to send sticker!", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
-                if (user == null) {
-                    return Transaction.success(mutableData);
-                }
-
-                Sticker sticker = new Sticker(checkStickerType(), StickerMessagingActivity.this.username);
-                user.receivedStickers.add(sticker);
-
-                mutableData.setValue(user);
-
-                return Transaction.success(mutableData);
-            }
-
-            @Override
-            public void onComplete(DatabaseError databaseError, boolean successful,
-                                   DataSnapshot dataSnapshot) {
-                // Transaction completed
-                Log.d(TAG, "postTransaction:onComplete:" + databaseError);
-                if (successful) {
-                    Toast.makeText(StickerMessagingActivity.this,
-                            "Sticker Sent", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(StickerMessagingActivity.this
-                            , "DBError: " + databaseError, Toast.LENGTH_SHORT).show();
-                }
-            }
-
-        });
     }
 
     private String checkStickerType() {
@@ -146,10 +143,10 @@ public class StickerMessagingActivity extends AppCompatActivity {
     private void showMostRecent(DataSnapshot snapshot) {
         User user = snapshot.getValue(User.class);
         return;
-        // TODO: this logic is wrong, refactor as mentioned as above TODO
+//         TODO: this logic is wrong, refactor as mentioned as above TODO
 //        if (snapshot.getKey() != null && !user.receivedStickers.isEmpty()) {
 //            recentReceivedStickerView.setText(String.valueOf(user.receivedStickers.get(-1)));
-//        }
+        //}
     }
 
 
