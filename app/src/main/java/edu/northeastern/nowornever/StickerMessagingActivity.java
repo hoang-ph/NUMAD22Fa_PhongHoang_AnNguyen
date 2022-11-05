@@ -3,8 +3,11 @@ package edu.northeastern.nowornever;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.RadioButton;
+import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import edu.northeastern.nowornever.model.sticker.Sticker;
@@ -29,11 +33,22 @@ import edu.northeastern.nowornever.model.sticker.User;
 public class StickerMessagingActivity extends AppCompatActivity {
     private static final String TAG = StickerMessagingActivity.class.getSimpleName(), ROOT = "users";
 
+    // Reference here: https://developer.android.com/reference/android/R.drawable.html
+    private static final Map<String, Integer> STICKER_SOURCES = Map.of(
+            "Star", 17301516,
+            "Microphone", 17301681,
+            "Music", 17301635,
+            "Phone",17301638,
+            "Bluetooth", 17301632
+    );
+
     private DatabaseReference ref;
     private TextView recentReceivedStickerView;
     private String username;
     private EditText receiverUsername;
-    private RadioButton sticker;
+    private Spinner typeSpinner;
+    private String selectedStickerType;
+    private ImageView stickerImageView;
     private List<Sticker> receiverList = new ArrayList<>();
 
     @Override
@@ -41,13 +56,31 @@ public class StickerMessagingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sticker_messaging);
 
+        stickerImageView = findViewById(R.id.stickerImgView);
         TextView usernameView = findViewById(R.id.usernameView);
         username = getIntent().getStringExtra("usernameKey");
         usernameView.setText(username);
 
+        // Sticker type Spinner
+        typeSpinner = findViewById(R.id.stickerTypeSpinner);
+        ArrayAdapter<CharSequence> typeAdapter = ArrayAdapter.createFromResource(this,R.array.sticker_type_array, android.R.layout.simple_spinner_dropdown_item);
+        typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        typeSpinner.setAdapter(typeAdapter);
+        typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedStickerType = adapterView.getItemAtPosition(i).toString();
+                Log.d(TAG, "type onItemSelected: " + selectedStickerType);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
         recentReceivedStickerView = findViewById(R.id.recentReceivedSticker);
         receiverUsername = findViewById(R.id.receiverUsername);
-        sticker = findViewById(R.id.sticker1);
 
         ref = FirebaseDatabase.getInstance().getReference();
 
@@ -95,13 +128,19 @@ public class StickerMessagingActivity extends AppCompatActivity {
             return;
         }
 
+        if (selectedStickerType == null) {
+            Toast.makeText(getApplicationContext(), "A sticker must be selected",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         // TODO: Check if receiver exists? Might not be necessary
 
         // Retrieve existing data first
         ref.child(ROOT).child(receiver).child("receivedStickers").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                GenericTypeIndicator<List<Sticker>> t = new GenericTypeIndicator<List<Sticker>>() {};
+                GenericTypeIndicator<List<Sticker>> t = new GenericTypeIndicator<>() {};
                 receiverList = snapshot.getValue(t);
                 Log.d(TAG, "receivedStickers onDataChange: snapshot = " + Objects.requireNonNull(snapshot.getValue()));
             }
@@ -115,7 +154,7 @@ public class StickerMessagingActivity extends AppCompatActivity {
         });
 
         // Add to list
-        Sticker tempSticker = new Sticker(checkStickerType(), this.username);
+        Sticker tempSticker = new Sticker(selectedStickerType, this.username);
         receiverList.add(tempSticker);
 
         // Then write
@@ -127,26 +166,17 @@ public class StickerMessagingActivity extends AppCompatActivity {
                         , "Failed to send sticker!", Toast.LENGTH_SHORT).show());
     }
 
-    // TODO: 2 tasks:
-    //  1 - change sticker type to actually sticker instead of String
-    // 2 - Change these buttons to spinner?
-    private String checkStickerType() {
-        if (sticker.isChecked()) {
-            return "Type 1";
-        }
-        return "Type 2";
-    }
-
 
     private void showMostRecent(DataSnapshot snapshot) {
         if (snapshot != null) {
-            GenericTypeIndicator<List<Sticker>> t = new GenericTypeIndicator<List<Sticker>>() {};
+            GenericTypeIndicator<List<Sticker>> t = new GenericTypeIndicator<>() {};
             List<Sticker> list = snapshot.getValue(t);
             Log.d(TAG, "receivedStickers onDataChange: snapshot = " + (snapshot.getValue(t)));
             if (list != null) {
                 if (list.size() != 0) {
-                    String displayValue = String.valueOf(list.get(list.size() -1));
-                    recentReceivedStickerView.setText(displayValue);
+                    Sticker tempSticker = list.get(list.size() -1);
+                    recentReceivedStickerView.setText(tempSticker.getStickerInfo());
+                    stickerImageView.setImageResource(STICKER_SOURCES.get(tempSticker.type));
                 }
             }
         }

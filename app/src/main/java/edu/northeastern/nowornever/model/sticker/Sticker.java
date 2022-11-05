@@ -16,4 +16,8 @@ public class Sticker {
         this.senderUsername = senderUsername;
         this.dateSent = Utils.date();
     }
+
+    public String getStickerInfo() {
+        return "Sticker was sent by " + this.senderUsername + " at " + this.dateSent;
+    }
 }

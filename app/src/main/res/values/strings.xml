@@ -47,9 +47,19 @@
     <string name="login">Log In</string>
 
     <!--- StickerMessagingActivity -->
+    <string name="sticker_type">Sticker Selection</string>
     <string name="send_sticker">Send Sticker</string>
     <string name="sticker_display">Recent received sticker</string>
     <string name="username_inquiry">Receiver\'s username</string>
     <string name="about">About</string>
+    <string name="sticker_description">Sticker display</string>
+
+    <string-array name="sticker_type_array">
+        <item>Star</item>
+        <item>Microphone</item>
+        <item>Music</item>
+        <item>Phone</item>
+        <item>Bluetooth</item>
+    </string-array>
 
 </resources>
