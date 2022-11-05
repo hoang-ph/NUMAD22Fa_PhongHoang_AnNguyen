@@ -1,10 +1,12 @@
 package edu.northeastern.nowornever;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -46,7 +48,6 @@ public class StickerMessagingActivity extends AppCompatActivity {
     private TextView recentReceivedStickerView;
     private String username;
     private EditText receiverUsername;
-    private Spinner typeSpinner;
     private String selectedStickerType;
     private ImageView stickerImageView;
     private List<Sticker> receiverList = new ArrayList<>();
@@ -62,7 +63,7 @@ public class StickerMessagingActivity extends AppCompatActivity {
         usernameView.setText(username);
 
         // Sticker type Spinner
-        typeSpinner = findViewById(R.id.stickerTypeSpinner);
+        Spinner typeSpinner = findViewById(R.id.stickerTypeSpinner);
         ArrayAdapter<CharSequence> typeAdapter = ArrayAdapter.createFromResource(this,R.array.sticker_type_array, android.R.layout.simple_spinner_dropdown_item);
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         typeSpinner.setAdapter(typeAdapter);
@@ -116,6 +117,31 @@ public class StickerMessagingActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void getAllUsers(View view) {
+        final Dialog dialog = new Dialog(StickerMessagingActivity.this);
+        dialog.setContentView(R.layout.about_popup);
+        TextView allUserViews = dialog.findViewById(R.id.allUsersView);
+        ref.child(ROOT).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<String> allUserList = new ArrayList<>();
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    String name = (String) ds.child("username").getValue();
+                    allUserList.add(name);
+                }
+                allUserViews.setText(allUserList.toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+
+        Button backToMainScreen = dialog.findViewById(R.id.doneBtn);
+        backToMainScreen.setOnClickListener(view1 -> dialog.dismiss());
+        dialog.show();
     }
 
     public void sendSticker(View view) {
