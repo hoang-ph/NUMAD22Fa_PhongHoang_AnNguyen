@@ -12,8 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -22,28 +20,28 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import edu.northeastern.nowornever.model.sticker.Sticker;
 import edu.northeastern.nowornever.model.sticker.User;
 
 public class StickerMessagingActivity extends AppCompatActivity {
-    private static final String TAG = StickerMessagingActivity.class.getSimpleName();
+    private static final String TAG = StickerMessagingActivity.class.getSimpleName(), ROOT = "users";
 
     private DatabaseReference ref;
-    private TextView usernameView, recentReceivedStickerView;
+    private TextView recentReceivedStickerView;
     private String username;
     private EditText receiverUsername;
     private RadioButton sticker;
-    private List<Sticker> tempList = new ArrayList<>();
+    private List<Sticker> list, receiverList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sticker_messaging);
 
-        usernameView = findViewById(R.id.usernameView);
+        TextView usernameView = findViewById(R.id.usernameView);
         username = getIntent().getStringExtra("usernameKey");
         usernameView.setText(username);
 
@@ -53,17 +51,17 @@ public class StickerMessagingActivity extends AppCompatActivity {
 
         ref = FirebaseDatabase.getInstance().getReference();
 
-        ref.child("users").addChildEventListener(new ChildEventListener() {
+        ref.child(ROOT).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 showMostRecent(snapshot);
-                Log.e(TAG, "onChildAdded: snapshot = " + snapshot.getValue().toString());
+                Log.d(TAG, "onChildAdded: snapshot = " + Objects.requireNonNull(snapshot.getValue()));
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 showMostRecent(snapshot);
-                Log.e(TAG, "onChildChanged: snapshot = " + snapshot.getValue().toString());
+                Log.d(TAG, "onChildChanged: snapshot = " + Objects.requireNonNull(snapshot.getValue()));
             }
 
             @Override
@@ -78,36 +76,55 @@ public class StickerMessagingActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.e(TAG, "onCancelled:" + error);
+                Log.d(TAG, "onCancelled:" + error);
                 Toast.makeText(getApplicationContext()
                         , "DBError: " + error, Toast.LENGTH_SHORT).show();
             }
         });
 
-        // TODO: extra logics for existing user and data -> refactor this for received stickers
-        User user = new User(this.username);
-        ref.child("users").child(user.username).setValue(user);
-    }
-
-    public void sendSticker(View view) {
-        String receiver = receiverUsername.getText().toString();
-        if (receiver.matches("") || receiver.equals(this.username)) {
-            Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // Read first
-        ref.child("users").child(receiver).child("receivedStickers").addValueEventListener(new ValueEventListener() {
+        // Check if user already exists - avoid override
+        ref.child(ROOT).child(username).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                GenericTypeIndicator<List<Sticker>> t = new GenericTypeIndicator<List<Sticker>>() {};
-                tempList = snapshot.getValue(t);
-                Log.e(TAG, "onDataChange: snapshot = " + snapshot.getValue().toString());
+                if (!snapshot.exists()) {
+                    User user = new User(StickerMessagingActivity.this.username);
+                    ref.child(ROOT).child(user.username).setValue(user);
+                    Log.d(TAG, "Create new user: " + user);
+                }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.e(TAG, "onCancelled:" + error);
+                Log.d(TAG, "checkUser onCancelled:" + error);
+            }
+        });
+
+    }
+
+    public void sendSticker(View view) {
+        String receiver = receiverUsername.getText().toString();
+
+        if (receiver.matches("") || receiver.equals(this.username)) {
+            Toast.makeText(getApplicationContext(),
+                            "Receiver can't be null nor be the same as current username",
+                            Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // TODO: Check if receiver exists? Might not be necessary
+
+        // Retrieve existing data first
+        ref.child(ROOT).child(receiver).child("receivedStickers").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                GenericTypeIndicator<List<Sticker>> t = new GenericTypeIndicator<List<Sticker>>() {};
+                receiverList = snapshot.getValue(t);
+                Log.d(TAG, "receivedStickers onDataChange: snapshot = " + Objects.requireNonNull(snapshot.getValue()));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d(TAG, "receivedStickers onCancelled:" + error);
                 Toast.makeText(getApplicationContext()
                         , "DBError: " + error, Toast.LENGTH_SHORT).show();
             }
@@ -115,25 +132,20 @@ public class StickerMessagingActivity extends AppCompatActivity {
 
         // Add to list
         Sticker tempSticker = new Sticker(checkStickerType(), this.username);
-        tempList.add(tempSticker);
+        receiverList.add(tempSticker);
 
         // Then write
-        ref.child("users").child(receiver).child("receivedStickers").setValue(tempList).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Toast.makeText(getApplicationContext()
-                        , "Sticker sent successfully!", Toast.LENGTH_SHORT).show();
-            }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplicationContext()
-                                , "Failed to send sticker!", Toast.LENGTH_SHORT).show();
-                    }
-                });;
+        ref.child(ROOT).child(receiver).child("receivedStickers")
+                .setValue(receiverList)
+                .addOnSuccessListener(aVoid -> Toast.makeText(getApplicationContext(),
+                        "Sticker sent successfully!", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e -> Toast.makeText(getApplicationContext()
+                        , "Failed to send sticker!", Toast.LENGTH_SHORT).show());
     }
 
+    // TODO: 2 tasks:
+    //  1 - change sticker type to actually sticker instead of String
+    // 2 - Change these buttons to spinner?
     private String checkStickerType() {
         if (sticker.isChecked()) {
             return "Type 1";
@@ -143,12 +155,14 @@ public class StickerMessagingActivity extends AppCompatActivity {
 
 
     private void showMostRecent(DataSnapshot snapshot) {
-        User user = snapshot.getValue(User.class);
-        return;
-//         TODO: this logic is wrong, refactor as mentioned as above TODO
-//        if (snapshot.getKey() != null && !user.receivedStickers.isEmpty()) {
-//            recentReceivedStickerView.setText(String.valueOf(user.receivedStickers.get(-1)));
-        //}
+//        if (snapshot.getKey() != null && snapshot.child(username).child("receivedStickers").getKey() != null) {
+//            GenericTypeIndicator<List<Sticker>> t = new GenericTypeIndicator<List<Sticker>>() {};
+//            list = snapshot.child(username).child("receivedStickers").getValue(t);
+//            if (list.size() != 0) {
+//                String displayValue = String.valueOf(list.get(list.size() -1));
+//                recentReceivedStickerView.setText(displayValue);
+//            }
+//        }
     }
 
 
