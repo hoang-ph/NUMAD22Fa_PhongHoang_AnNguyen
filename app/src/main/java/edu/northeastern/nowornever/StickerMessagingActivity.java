@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -20,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,7 +34,7 @@ public class StickerMessagingActivity extends AppCompatActivity {
     private String username;
     private EditText receiverUsername;
     private RadioButton sticker;
-    private List<Sticker> list, receiverList;
+    private List<Sticker> receiverList = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,37 +51,6 @@ public class StickerMessagingActivity extends AppCompatActivity {
 
         ref = FirebaseDatabase.getInstance().getReference();
 
-        ref.child(ROOT).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                showMostRecent(snapshot);
-                Log.d(TAG, "onChildAdded: snapshot = " + Objects.requireNonNull(snapshot.getValue()));
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                showMostRecent(snapshot);
-                Log.d(TAG, "onChildChanged: snapshot = " + Objects.requireNonNull(snapshot.getValue()));
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.d(TAG, "onCancelled:" + error);
-                Toast.makeText(getApplicationContext()
-                        , "DBError: " + error, Toast.LENGTH_SHORT).show();
-            }
-        });
-
         // Check if user already exists - avoid override
         ref.child(ROOT).child(username).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -96,6 +65,21 @@ public class StickerMessagingActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.d(TAG, "checkUser onCancelled:" + error);
+            }
+        });
+
+        // Update view
+        ref.child(ROOT).child(username).child("receivedStickers").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                showMostRecent(snapshot);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d(TAG, "receivedStickers onCancelled:" + error);
+                Toast.makeText(getApplicationContext()
+                        , "DBError: " + error, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -155,14 +139,17 @@ public class StickerMessagingActivity extends AppCompatActivity {
 
 
     private void showMostRecent(DataSnapshot snapshot) {
-//        if (snapshot.getKey() != null && snapshot.child(username).child("receivedStickers").getKey() != null) {
-//            GenericTypeIndicator<List<Sticker>> t = new GenericTypeIndicator<List<Sticker>>() {};
-//            list = snapshot.child(username).child("receivedStickers").getValue(t);
-//            if (list.size() != 0) {
-//                String displayValue = String.valueOf(list.get(list.size() -1));
-//                recentReceivedStickerView.setText(displayValue);
-//            }
-//        }
+        if (snapshot != null) {
+            GenericTypeIndicator<List<Sticker>> t = new GenericTypeIndicator<List<Sticker>>() {};
+            List<Sticker> list = snapshot.getValue(t);
+            Log.d(TAG, "receivedStickers onDataChange: snapshot = " + (snapshot.getValue(t)));
+            if (list != null) {
+                if (list.size() != 0) {
+                    String displayValue = String.valueOf(list.get(list.size() -1));
+                    recentReceivedStickerView.setText(displayValue);
+                }
+            }
+        }
     }
 
 
