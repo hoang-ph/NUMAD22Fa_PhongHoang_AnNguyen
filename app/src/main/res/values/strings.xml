@@ -55,6 +55,7 @@
     <string name="sticker_description">Sticker display</string>
     <string name="all_users_title">All registered Usernames</string>
     <string name="done_btn">Done</string>
+    <string name="channel_id">StickyMessagingChannel</string>
 
     <string-array name="sticker_type_array">
         <item>Star</item>

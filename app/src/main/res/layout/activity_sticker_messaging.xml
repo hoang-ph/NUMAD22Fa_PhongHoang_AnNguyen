@@ -40,13 +40,14 @@
             app:layout_constraintTop_toTopOf="@+id/stickerTypeInfo" />
 
         <EditText
+            android:id="@+id/receiverUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/receiverUsername"
-            android:hint="@string/username_inquiry"
-            android:inputType="text"
             android:layout_marginStart="5dp"
-            android:autofillHints="" />
+            android:autofillHints=""
+            android:hint="@string/username_inquiry"
+            android:imeOptions="actionDone"
+            android:inputType="text" />
 
         <Button
             android:id="@+id/sendStickerBtn"

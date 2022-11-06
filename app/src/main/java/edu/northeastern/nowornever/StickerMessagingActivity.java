@@ -1,6 +1,14 @@
 package edu.northeastern.nowornever;
 
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +24,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,6 +43,7 @@ import edu.northeastern.nowornever.model.sticker.User;
 
 public class StickerMessagingActivity extends AppCompatActivity {
     private static final String TAG = StickerMessagingActivity.class.getSimpleName(), ROOT = "users";
+    private final int NOTIFICATION_STICKER_CODE = 7;
 
     // Reference here: https://developer.android.com/reference/android/R.drawable.html
     private static final Map<String, Integer> STICKER_SOURCES = Map.of(
@@ -55,6 +65,8 @@ public class StickerMessagingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Notification channel
+        createNotificationChannel();
         setContentView(R.layout.activity_sticker_messaging);
 
         stickerImageView = findViewById(R.id.stickerImgView);
@@ -116,7 +128,6 @@ public class StickerMessagingActivity extends AppCompatActivity {
                         , "DBError: " + error, Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     public void getAllUsers(View view) {
@@ -149,7 +160,7 @@ public class StickerMessagingActivity extends AppCompatActivity {
 
         if (receiver.matches("") || receiver.equals(this.username)) {
             Toast.makeText(getApplicationContext(),
-                            "Receiver can't be null nor be the same as current username",
+                            "Receiver can't be blank nor be the same as current username",
                             Toast.LENGTH_SHORT).show();
             return;
         }
@@ -190,6 +201,9 @@ public class StickerMessagingActivity extends AppCompatActivity {
                         "Sticker sent successfully!", Toast.LENGTH_SHORT).show())
                 .addOnFailureListener(e -> Toast.makeText(getApplicationContext()
                         , "Failed to send sticker!", Toast.LENGTH_SHORT).show());
+
+        // Send notification
+        sendNotification(receiver);
     }
 
 
@@ -208,5 +222,32 @@ public class StickerMessagingActivity extends AppCompatActivity {
         }
     }
 
+    public void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Sticker Messaging Notification";
+            String description = getString(R.string.description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("StickyMessagingChannel", name, importance);
+            channel.setDescription(description);
+            channel.enableLights(true);
+            channel.setLightColor(Color.RED);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
 
+    public void sendNotification(String username) {
+        PendingIntent sendMessage = PendingIntent.getActivity(this, (int)System.currentTimeMillis(), new Intent(this, StickerMessagingActivity.class), PendingIntent.FLAG_IMMUTABLE);
+        String channelID = getString(R.string.channel_id);
+        Notification notification = new NotificationCompat.Builder(this, channelID)
+                .setContentTitle(username)
+                .setSmallIcon(R.drawable.text_icon)
+                .setContentText("hidden")
+                .setTicker("Ticker text")
+                .addAction(R.drawable.text_icon, "Message", sendMessage)
+                .setContentIntent(sendMessage).build();
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notification.flags |= Notification.FLAG_AUTO_CANCEL;
+        notificationManager.notify(NOTIFICATION_STICKER_CODE, notification);
+    }
 }
