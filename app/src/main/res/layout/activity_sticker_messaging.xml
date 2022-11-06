@@ -75,7 +75,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/sticker_display"/>
 
-        <ImageView
+        <pl.droidsonroids.gif.GifImageView
             android:id="@+id/stickerImgView"
             android:layout_width="50dp"
             android:layout_height="50dp"

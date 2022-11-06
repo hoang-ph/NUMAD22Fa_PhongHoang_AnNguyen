@@ -6,7 +6,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import edu.northeastern.nowornever.model.sticker.Sticker;
+import pl.droidsonroids.gif.GifImageView;
 
 public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecyclerViewAdapter.StickerViewHolder> {
 
@@ -49,7 +49,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
 
     public static class StickerViewHolder extends RecyclerView.ViewHolder {
 
-        private final ImageView stickerImg;
+        private final GifImageView stickerImg;
         private final TextView stickerInfo;
 
         public StickerViewHolder(@NonNull View itemView) {

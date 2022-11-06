@@ -21,7 +21,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +41,7 @@ import java.util.List;
 
 import edu.northeastern.nowornever.model.sticker.Sticker;
 import edu.northeastern.nowornever.model.sticker.User;
+import pl.droidsonroids.gif.GifImageView;
 
 public class StickerMessagingActivity extends AppCompatActivity {
 
@@ -53,7 +53,7 @@ public class StickerMessagingActivity extends AppCompatActivity {
     private String username;
     private EditText receiverUsername;
     private String selectedStickerType;
-    private ImageView stickerImageView;
+    private GifImageView stickerImageView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
