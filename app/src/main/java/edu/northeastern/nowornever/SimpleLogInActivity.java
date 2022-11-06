@@ -22,7 +22,7 @@ public class SimpleLogInActivity extends AppCompatActivity {
     public void startStickerMsgAct(View view) {
         String username = usernameInput.getText().toString();
         if (username.matches("")) {
-            Toast.makeText(getApplicationContext(), "Username cannot be null", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Username cannot be blank", Toast.LENGTH_SHORT).show();
         } else {
             Intent intent = new Intent(this, StickerMessagingActivity.class);
             intent.putExtra("usernameKey", username);
