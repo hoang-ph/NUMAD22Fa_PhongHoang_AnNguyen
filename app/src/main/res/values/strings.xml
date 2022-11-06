@@ -49,9 +49,10 @@
     <!--- StickerMessagingActivity -->
     <string name="sticker_type">Sticker Selection</string>
     <string name="send_sticker">Send Sticker</string>
-    <string name="sticker_display">Recent received sticker</string>
+    <string name="sticker_display">Most recent received sticker</string>
     <string name="username_inquiry">Receiver\'s username</string>
     <string name="about">About</string>
+    <string name="history">History</string>
     <string name="sticker_description">Sticker display</string>
     <string name="all_users_title">All registered Usernames</string>
     <string name="done_btn">Done</string>

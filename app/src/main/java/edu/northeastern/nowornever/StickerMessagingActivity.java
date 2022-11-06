@@ -1,5 +1,10 @@
 package edu.northeastern.nowornever;
 
+import static edu.northeastern.nowornever.utils.Constants.ROOT;
+import static edu.northeastern.nowornever.utils.Constants.STICKER_RESOURCES;
+import static edu.northeastern.nowornever.utils.Constants.STICKER_STORAGE;
+import static edu.northeastern.nowornever.utils.Constants.USERNAME_KEY;
+
 import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -34,23 +39,14 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import edu.northeastern.nowornever.model.sticker.Sticker;
 import edu.northeastern.nowornever.model.sticker.User;
 
 public class StickerMessagingActivity extends AppCompatActivity {
-    private static final String TAG = StickerMessagingActivity.class.getSimpleName(), ROOT = "users";
-    private final int NOTIFICATION_STICKER_CODE = 7;
 
-    // Reference here: https://developer.android.com/reference/android/R.drawable.html
-    private static final Map<String, Integer> STICKER_SOURCES = Map.of(
-            "Star", 17301516,
-            "Microphone", 17301681,
-            "Music", 17301635,
-            "Phone", 17301638,
-            "Bluetooth", 17301632
-    );
+    private static final String TAG = StickerMessagingActivity.class.getSimpleName();
+    private final int NOTIFICATION_STICKER_CODE = 7;
 
     private DatabaseReference ref;
     private TextView recentReceivedStickerView;
@@ -68,7 +64,7 @@ public class StickerMessagingActivity extends AppCompatActivity {
 
         stickerImageView = findViewById(R.id.stickerImgView);
         TextView usernameView = findViewById(R.id.usernameView);
-        username = getIntent().getStringExtra("usernameKey");
+        username = getIntent().getStringExtra(USERNAME_KEY);
         usernameView.setText(username);
 
         // Sticker type Spinner
@@ -112,7 +108,7 @@ public class StickerMessagingActivity extends AppCompatActivity {
         });
 
         // Update view
-        ref.child(ROOT).child(username).child("receivedStickers").addValueEventListener(new ValueEventListener() {
+        ref.child(ROOT).child(username).child(STICKER_STORAGE).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 showMostRecent(snapshot);
@@ -169,13 +165,18 @@ public class StickerMessagingActivity extends AppCompatActivity {
         }
 
         Sticker newSticker = new Sticker(selectedStickerType, this.username);
-        ref.child(ROOT).child(receiver).child("receivedStickers").push().setValue(newSticker)
+        ref.child(ROOT).child(receiver).child(STICKER_STORAGE).push().setValue(newSticker)
                 .addOnSuccessListener(aVoid -> Toast.makeText(getApplicationContext(),
                         "Sticker sent successfully!", Toast.LENGTH_SHORT).show())
                 .addOnFailureListener(e -> Toast.makeText(getApplicationContext()
                         , "Failed to send sticker!", Toast.LENGTH_SHORT).show());
     }
 
+    public void showHistory(View view) {
+        Intent intent = new Intent(this, HistoryActivity.class);
+        intent.putExtra(USERNAME_KEY, username);
+        startActivity(intent);
+    }
 
     private void showMostRecent(DataSnapshot snapshot) {
         if (snapshot != null) {
@@ -187,7 +188,7 @@ public class StickerMessagingActivity extends AppCompatActivity {
             if (list.size() != 0) {
                 Sticker latestSticker = list.get(list.size() -1);
                 recentReceivedStickerView.setText(latestSticker.getStickerInfo());
-                stickerImageView.setImageResource(STICKER_SOURCES.get(latestSticker.type));
+                stickerImageView.setImageResource(STICKER_RESOURCES.get(latestSticker.type));
             }
         }
     }

@@ -18,6 +18,6 @@ public class Sticker {
     }
 
     public String getStickerInfo() {
-        return "Sticker was sent by " + this.senderUsername + " at " + this.dateSent;
+        return this.type + " was sent by " + this.senderUsername + " at " + this.dateSent;
     }
 }
