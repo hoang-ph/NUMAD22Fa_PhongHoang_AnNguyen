@@ -30,13 +30,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import edu.northeastern.nowornever.model.sticker.Sticker;
 import edu.northeastern.nowornever.model.sticker.User;
@@ -50,7 +48,7 @@ public class StickerMessagingActivity extends AppCompatActivity {
             "Star", 17301516,
             "Microphone", 17301681,
             "Music", 17301635,
-            "Phone",17301638,
+            "Phone", 17301638,
             "Bluetooth", 17301632
     );
 
@@ -60,7 +58,6 @@ public class StickerMessagingActivity extends AppCompatActivity {
     private EditText receiverUsername;
     private String selectedStickerType;
     private ImageView stickerImageView;
-    private List<Sticker> receiverList = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -160,45 +157,19 @@ public class StickerMessagingActivity extends AppCompatActivity {
     public void sendSticker(View view) {
         String receiver = receiverUsername.getText().toString();
 
-        if (receiver.matches("") || receiver.equals(this.username)) {
-            Toast.makeText(getApplicationContext(),
-                            "Receiver can't be blank nor be the same as current username",
-                            Toast.LENGTH_SHORT).show();
+        if (receiver.matches("")) {
+            Toast.makeText(getApplicationContext(), "Receiver can't be blank", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (receiver.equals(this.username)) {
+            Toast.makeText(getApplicationContext(), "Receiver can't be the same as current username", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (selectedStickerType == null) {
+            Toast.makeText(getApplicationContext(), "A sticker must be selected", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (selectedStickerType == null) {
-            Toast.makeText(getApplicationContext(), "A sticker must be selected",
-                    Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // TODO: Check if receiver exists? Might not be necessary
-
-        // Retrieve existing data first
-        ref.child(ROOT).child(receiver).child("receivedStickers").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                GenericTypeIndicator<List<Sticker>> t = new GenericTypeIndicator<>() {};
-                receiverList = snapshot.getValue(t);
-                Log.d(TAG, "receivedStickers onDataChange: snapshot = " + Objects.requireNonNull(snapshot.getValue()));
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.d(TAG, "receivedStickers onCancelled:" + error);
-                Toast.makeText(getApplicationContext()
-                        , "DBError: " + error, Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        // Add to list
-        Sticker tempSticker = new Sticker(selectedStickerType, this.username);
-        receiverList.add(tempSticker);
-
-        // Then write
-        ref.child(ROOT).child(receiver).child("receivedStickers")
-                .setValue(receiverList)
+        Sticker newSticker = new Sticker(selectedStickerType, this.username);
+        ref.child(ROOT).child(receiver).child("receivedStickers").push().setValue(newSticker)
                 .addOnSuccessListener(aVoid -> Toast.makeText(getApplicationContext(),
                         "Sticker sent successfully!", Toast.LENGTH_SHORT).show())
                 .addOnFailureListener(e -> Toast.makeText(getApplicationContext()
@@ -208,15 +179,15 @@ public class StickerMessagingActivity extends AppCompatActivity {
 
     private void showMostRecent(DataSnapshot snapshot) {
         if (snapshot != null) {
-            GenericTypeIndicator<List<Sticker>> t = new GenericTypeIndicator<>() {};
-            List<Sticker> list = snapshot.getValue(t);
-            Log.d(TAG, "receivedStickers onDataChange: snapshot = " + (snapshot.getValue(t)));
-            if (list != null) {
-                if (list.size() != 0) {
-                    Sticker tempSticker = list.get(list.size() -1);
-                    recentReceivedStickerView.setText(tempSticker.getStickerInfo());
-                    stickerImageView.setImageResource(STICKER_SOURCES.get(tempSticker.type));
-                }
+            List<Sticker> list = new ArrayList<>();
+            for (DataSnapshot ds : snapshot.getChildren()) {
+                Sticker sticker = ds.getValue(Sticker.class);
+                list.add(sticker);
+            }
+            if (list.size() != 0) {
+                Sticker latestSticker = list.get(list.size() -1);
+                recentReceivedStickerView.setText(latestSticker.getStickerInfo());
+                stickerImageView.setImageResource(STICKER_SOURCES.get(latestSticker.type));
             }
         }
     }
