@@ -119,6 +119,8 @@ public class StickerMessagingActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 showMostRecent(snapshot);
+                // Send notification
+                sendNotification(username);
             }
 
             @Override
@@ -201,9 +203,6 @@ public class StickerMessagingActivity extends AppCompatActivity {
                         "Sticker sent successfully!", Toast.LENGTH_SHORT).show())
                 .addOnFailureListener(e -> Toast.makeText(getApplicationContext()
                         , "Failed to send sticker!", Toast.LENGTH_SHORT).show());
-
-        // Send notification
-        sendNotification(receiver);
     }
 
 
