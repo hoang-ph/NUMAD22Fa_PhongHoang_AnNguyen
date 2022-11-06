@@ -10,6 +10,8 @@ import android.widget.Toast;
 
 public class SimpleLogInActivity extends AppCompatActivity {
 
+    private static final String USERNAME_KEY = "usernameKey";
+
     private EditText usernameInput;
 
     @Override
@@ -25,7 +27,7 @@ public class SimpleLogInActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Username cannot be blank", Toast.LENGTH_SHORT).show();
         } else {
             Intent intent = new Intent(this, StickerMessagingActivity.class);
-            intent.putExtra("usernameKey", username);
+            intent.putExtra(USERNAME_KEY, username);
             startActivity(intent);
         }
     }
