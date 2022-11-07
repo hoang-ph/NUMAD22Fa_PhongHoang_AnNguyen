@@ -57,6 +57,8 @@
     <string name="all_users_title">All registered Usernames</string>
     <string name="done_btn">Done</string>
     <string name="channel_id">StickyMessagingChannel</string>
+    <string name="history_act_header">Number of stickers</string>
+    <string name="empty_list">0</string>
 
     <string-array name="sticker_type_array">
         <item>Star</item>

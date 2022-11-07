@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -27,18 +28,19 @@ public class HistoryActivity extends AppCompatActivity {
 
     private static final String TAG = HistoryActivity.class.getSimpleName();
 
-    private String username;
-    private DatabaseReference ref;
     private RecyclerView stickerRecyclerView;
     private List<Sticker> stickers;
+    private TextView numStickers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
-        username = getIntent().getStringExtra(USERNAME_KEY);
-        ref = FirebaseDatabase.getInstance().getReference();
+        String username = getIntent().getStringExtra(USERNAME_KEY);
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+
+        numStickers = findViewById(R.id.numStickersView);
 
         // Recycler View for the list of games
         stickers = new ArrayList<>();
@@ -58,6 +60,7 @@ public class HistoryActivity extends AppCompatActivity {
                 }
                 if (stickers.size() != 0) {
                     stickerRecyclerView.getAdapter().notifyDataSetChanged();
+                    numStickers.setText(String.valueOf(stickers.size()));
                 }
             }
 
