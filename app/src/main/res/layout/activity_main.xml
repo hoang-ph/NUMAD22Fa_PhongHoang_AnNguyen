@@ -14,7 +14,6 @@
         android:text="@string/now_or_never"
         app:layout_constraintBottom_toTopOf="@+id/webServiceButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
@@ -27,7 +26,6 @@
         android:text="@string/web_service"
         app:layout_constraintBottom_toTopOf="@+id/stickerMessagingButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -37,10 +35,20 @@
         android:layout_height="wrap_content"
         android:onClick="showStickerMessagingActivity"
         android:text="@string/sticker_messaging"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/trackHabitButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/webServiceButton" />
+
+    <Button
+        android:id="@+id/trackHabitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="showHabitCentralPage"
+        android:text="@string/track_habit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stickerMessagingButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

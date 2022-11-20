@@ -13,7 +13,6 @@
     <string name="developer">Developer:</string>
     <string name="release_date">Release Date:</string>
     <string name="sort_by">Sort by:</string>
-    <string name="sticker_messaging">Sticker Messaging</string>
     <string-array name="platform_array">
         <item>All</item>
         <item>pc</item>
@@ -47,6 +46,7 @@
     <string name="login">Log In</string>
 
     <!--- StickerMessagingActivity -->
+    <string name="sticker_messaging">Sticker Messaging</string>
     <string name="sticker_type">Sticker Selection</string>
     <string name="send_sticker">Send Sticker</string>
     <string name="sticker_display">Most recent received sticker</string>
@@ -67,5 +67,8 @@
         <item>Phone</item>
         <item>Bluetooth</item>
     </string-array>
+
+    <!--- TrackHabitActivity -->
+    <string name="track_habit">Track Habits</string>
 
 </resources>

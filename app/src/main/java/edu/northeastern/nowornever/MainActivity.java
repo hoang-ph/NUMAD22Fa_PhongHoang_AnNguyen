@@ -21,4 +21,8 @@ public class MainActivity extends AppCompatActivity {
     public void showStickerMessagingActivity(View view) {
         startActivity(new Intent(this, SimpleLogInActivity.class));
     }
+
+    public void showHabitCentralPage(View view) {
+        startActivity(new Intent(this, HabitActivity.class));
+    }
 }
