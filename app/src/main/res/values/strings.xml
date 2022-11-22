@@ -73,4 +73,10 @@
     <!--- TrackHabitActivity -->
     <string name="track_habit">Track Habits</string>
 
+    <string name="nav_item_1">Home</string>
+    <string name="nav_item_2">Note</string>
+    <string name="nav_item_3">Statistic</string>
+    <string name="nav_item_4">Media</string>
+    <string name="nav_item_5">Friend</string>
+
 </resources>
