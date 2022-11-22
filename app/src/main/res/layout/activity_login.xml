@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".habit.LoginActivity">
+
+    <EditText
+        android:id="@+id/usernameHabitInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/username_hint"
+        android:layout_margin="8dp"
+        android:inputType="text"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/passwordHabitInput"/>
+
+    <EditText
+        android:id="@+id/passwordHabitInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/password_hint"
+        android:layout_margin="8dp"
+        android:inputType="textPassword"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/usernameHabitInput"
+        app:layout_constraintBottom_toTopOf="@+id/loginBtnHabit"/>
+
+    <Button
+        android:id="@+id/loginBtnHabit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="startLogIn"
+        android:text="@string/login"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/signupBtnHabit"
+        app:layout_constraintTop_toBottomOf="@id/passwordHabitInput" />
+
+    <Button
+        android:id="@+id/signupBtnHabit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="startSignUp"
+        android:text="@string/signup"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/loginBtnHabit" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

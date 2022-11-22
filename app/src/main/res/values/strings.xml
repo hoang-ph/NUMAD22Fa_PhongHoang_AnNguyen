@@ -42,8 +42,10 @@
     </string-array>
 
     <!--- LogInActivity -->
-    <string name="username_hint">Your username</string>
+    <string name="username_hint">Username</string>
+    <string name="password_hint">Password</string>
     <string name="login">Log In</string>
+    <string name="signup">Sign Up</string>
 
     <!--- StickerMessagingActivity -->
     <string name="sticker_messaging">Sticker Messaging</string>

@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import edu.northeastern.nowornever.habit.LoginActivity;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -23,6 +25,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showHabitCentralPage(View view) {
-        startActivity(new Intent(this, HabitActivity.class));
+        startActivity(new Intent(this, LoginActivity.class));
     }
 }
