@@ -1,12 +1,16 @@
 package edu.northeastern.nowornever.habit;
 
+import static edu.northeastern.nowornever.utils.Constants.HABIT_ID_KEY;
+
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -36,6 +40,7 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecycler
         holder.habitTitleView.setText(habits.get(position).getHabitName());
         holder.streakView.setText(String.valueOf(habits.get(position).getCurrStreak()));
         holder.frequencyView.setText(habits.get(position).getFrequency());
+        holder.habitItemLayout.setOnClickListener(view -> launchHabitCentralAct(habits.get(position).getUuid()));
     }
 
     @Override
@@ -45,14 +50,22 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecycler
 
     public static class HabitViewHolder extends RecyclerView.ViewHolder {
 
+        private final ConstraintLayout habitItemLayout;
         private final TextView habitTitleView, streakView, frequencyView;
 
         public HabitViewHolder(@NonNull View itemView) {
             super(itemView);
+            habitItemLayout = itemView.findViewById(R.id.habitItemLayout);
             habitTitleView = itemView.findViewById(R.id.habitTitleView);
             streakView = itemView.findViewById(R.id.streakView);
             frequencyView = itemView.findViewById(R.id.frequencyView);
         }
+    }
+
+    private void launchHabitCentralAct(String habitUuid) {
+        Intent intent = new Intent(context, HabitActivity.class);
+        intent.putExtra(HABIT_ID_KEY, habitUuid);
+        context.startActivity(intent);
     }
 
 }
