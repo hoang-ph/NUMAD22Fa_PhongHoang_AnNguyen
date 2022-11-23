@@ -1,4 +1,4 @@
-package edu.northeastern.nowornever;
+package edu.northeastern.nowornever.stickers;
 
 import static edu.northeastern.nowornever.utils.Constants.ROOT;
 import static edu.northeastern.nowornever.utils.Constants.USERNAME_KEY;
@@ -22,7 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.northeastern.nowornever.model.sticker.Sticker;
+import edu.northeastern.nowornever.R;
 
 public class HistoryActivity extends AppCompatActivity {
 

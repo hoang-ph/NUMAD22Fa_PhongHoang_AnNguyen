@@ -1,4 +1,4 @@
-package edu.northeastern.nowornever;
+package edu.northeastern.nowornever.stickers;
 
 import static edu.northeastern.nowornever.utils.Constants.STICKER_RESOURCES;
 
@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import edu.northeastern.nowornever.model.sticker.Sticker;
+import edu.northeastern.nowornever.R;
 import pl.droidsonroids.gif.GifImageView;
 
 public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecyclerViewAdapter.StickerViewHolder> {

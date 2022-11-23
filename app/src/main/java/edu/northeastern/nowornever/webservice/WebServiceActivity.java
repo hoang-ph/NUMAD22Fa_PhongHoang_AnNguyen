@@ -1,4 +1,4 @@
-package edu.northeastern.nowornever;
+package edu.northeastern.nowornever.webservice;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -20,9 +20,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.northeastern.nowornever.R;
 import edu.northeastern.nowornever.model.Game;
 import edu.northeastern.nowornever.model.IFreeToGame;
-import edu.northeastern.nowornever.webservice.RecyclerViewAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

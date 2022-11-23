@@ -1,4 +1,4 @@
-package edu.northeastern.nowornever.model.sticker;
+package edu.northeastern.nowornever.stickers;
 
 public class User {
 

@@ -1,4 +1,4 @@
-package edu.northeastern.nowornever;
+package edu.northeastern.nowornever.stickers;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import edu.northeastern.nowornever.R;
 
 public class SimpleLogInActivity extends AppCompatActivity {
 

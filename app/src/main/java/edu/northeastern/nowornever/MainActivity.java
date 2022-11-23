@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 
 import edu.northeastern.nowornever.habit.LoginActivity;
+import edu.northeastern.nowornever.stickers.SimpleLogInActivity;
+import edu.northeastern.nowornever.webservice.WebServiceActivity;
 
 public class MainActivity extends AppCompatActivity {
 

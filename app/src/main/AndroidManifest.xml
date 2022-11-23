@@ -30,14 +30,14 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".HistoryActivity"
+            android:name=".stickers.HistoryActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".SimpleLogInActivity"
+            android:name=".stickers.SimpleLogInActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -52,8 +52,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".WebServiceActivity" />
-        <activity android:name=".StickerMessagingActivity" />
+        <activity android:name=".webservice.WebServiceActivity" />
+        <activity android:name=".stickers.StickerMessagingActivity" />
     </application>
 
 </manifest>
