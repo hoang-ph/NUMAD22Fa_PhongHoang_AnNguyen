@@ -16,6 +16,13 @@
         android:theme="@style/Theme.NowOrNever"
         tools:targetApi="31">
         <activity
+            android:name=".habit.HabitsListActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".habit.LoginActivity"
             android:exported="false">
             <meta-data

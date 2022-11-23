@@ -1,5 +1,9 @@
 package edu.northeastern.nowornever.habit;
 
+import static edu.northeastern.nowornever.utils.Constants.SHARED_PREF;
+import static edu.northeastern.nowornever.utils.Constants.SUCCESS_LOGOUT;
+import static edu.northeastern.nowornever.utils.Constants.USERNAME_KEY;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -8,14 +12,14 @@ import androidx.fragment.app.FragmentTransaction;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import edu.northeastern.nowornever.R;
 import edu.northeastern.nowornever.databinding.ActivityHabitBinding;
 
 public class HabitActivity extends AppCompatActivity {
-
-    private static final String USERNAME_KEY = "usernameKey", SHARED_PREF = "userPref";
 
     private String username;
     private SharedPreferences sharedPreferences;
@@ -67,6 +71,14 @@ public class HabitActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.habitFrameLayout, fragment);
         fragmentTransaction.commit();
+    }
+
+    public void LogOut(View view) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.apply();
+        Toast.makeText(getApplicationContext(), SUCCESS_LOGOUT, Toast.LENGTH_SHORT).show();
+        finish();
     }
 
 }

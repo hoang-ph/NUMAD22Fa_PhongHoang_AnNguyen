@@ -45,6 +45,7 @@
     <string name="username_hint">Username</string>
     <string name="password_hint">Password</string>
     <string name="login">Log In</string>
+    <string name="logout">Log Out</string>
     <string name="signup">Sign Up</string>
 
     <!--- StickerMessagingActivity -->
