@@ -14,11 +14,4 @@
         android:textSize="20sp"
         android:layout_gravity="center" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:onClick="LogOut"
-        android:text="@string/logout"/>
-
 </FrameLayout>

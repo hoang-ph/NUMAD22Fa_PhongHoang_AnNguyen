@@ -14,6 +14,7 @@ public class Constants {
     // For Habit Tracking Activity
     public static final String
             ROOT_HABIT = "habitUsers",
+            CHILD_HABIT = "habitsList",
             SHARED_PREF = "userPref",
             SUCCESS_LOGIN = "Successfully logged in",
             SUCCESS_LOGOUT = "Successfully logged out",

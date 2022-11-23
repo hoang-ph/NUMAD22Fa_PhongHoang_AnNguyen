@@ -1,0 +1,58 @@
+package edu.northeastern.nowornever.habit;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
+
+import edu.northeastern.nowornever.R;
+
+public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecyclerViewAdapter.HabitViewHolder> {
+
+    private List<Habit> habits;
+    private Context context;
+
+    public HabitRecyclerViewAdapter(Context context, List<Habit> habits) {
+        this.context = context;
+        this.habits = habits;
+    }
+
+    @NonNull
+    @Override
+    public HabitViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View view = inflater.inflate(R.layout.history_item, parent, false);
+        return new HabitViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull HabitViewHolder holder, int position) {
+        holder.habitTitleView.setText(habits.get(position).getHabitName());
+        holder.streakView.setText(String.valueOf(habits.get(position).getCurrStreak()));
+        holder.frequencyView.setText(habits.get(position).getFrequency());
+    }
+
+    @Override
+    public int getItemCount() {
+        return habits.size();
+    }
+
+    public static class HabitViewHolder extends RecyclerView.ViewHolder {
+
+        private final TextView habitTitleView, streakView, frequencyView;
+
+        public HabitViewHolder(@NonNull View itemView) {
+            super(itemView);
+            habitTitleView = itemView.findViewById(R.id.habitTitleView);
+            streakView = itemView.findViewById(R.id.streakView);
+            frequencyView = itemView.findViewById(R.id.frequencyView);
+        }
+    }
+
+}

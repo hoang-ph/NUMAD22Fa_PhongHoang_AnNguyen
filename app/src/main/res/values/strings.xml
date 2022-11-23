@@ -73,6 +73,8 @@
 
     <!--- TrackHabitActivity -->
     <string name="track_habit">Track Habits</string>
+    <string name="streak">Current Streak</string>
+    <string name="frequency">Frequency</string>
 
     <string name="nav_item_1">Home</string>
     <string name="nav_item_2">Note</string>

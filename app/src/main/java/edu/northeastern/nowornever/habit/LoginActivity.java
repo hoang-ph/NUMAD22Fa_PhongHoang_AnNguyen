@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
 
         username = sharedPreferences.getString(USERNAME_KEY, null);
         if (username != null) {
-            Intent intent = new Intent(this, HabitActivity.class);
+            Intent intent = new Intent(this, HabitsListActivity.class);
             startActivity(intent);
         }
 
@@ -118,7 +118,7 @@ public class LoginActivity extends AppCompatActivity {
         editor.putString(USERNAME_KEY, this.username);
         editor.apply();
 
-        Intent intent = new Intent(this, HabitActivity.class);
+        Intent intent = new Intent(this, HabitsListActivity.class);
         startActivity(intent);
     }
 
