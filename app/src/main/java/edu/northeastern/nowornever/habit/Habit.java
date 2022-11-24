@@ -5,9 +5,7 @@ import java.util.UUID;
 
 public class Habit {
 
-    private String uuid, habitName, frequency;
-    private long createdDate;
-    private int currStreak;
+    private String uuid, habitName, frequency, createdDate, currStreak;
 
     public Habit() {
     }
@@ -15,9 +13,9 @@ public class Habit {
     public Habit(String habitName, String frequency) {
         this.habitName = habitName;
         this.frequency = frequency;
-        this.currStreak = 0;
+        this.currStreak = "0";
         this.uuid = UUID.randomUUID().toString();
-        this.createdDate = Instant.now().toEpochMilli();
+        this.createdDate = String.valueOf(Instant.now().toEpochMilli());
     }
 
     public String getHabitName() {
@@ -28,7 +26,7 @@ public class Habit {
         return frequency;
     }
 
-    public int getCurrStreak() {
+    public String getCurrStreak() {
         return currStreak;
     }
 
@@ -36,7 +34,7 @@ public class Habit {
         return uuid;
     }
 
-    public long getCreatedDate() {
+    public String getCreatedDate() {
         return createdDate;
     }
 

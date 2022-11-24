@@ -38,7 +38,8 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecycler
     @Override
     public void onBindViewHolder(@NonNull HabitViewHolder holder, int position) {
         holder.habitTitleView.setText(habits.get(position).getHabitName());
-        holder.streakView.setText(String.valueOf(habits.get(position).getCurrStreak()));
+        String currStreak = "Current streak: " + habits.get(position).getCurrStreak() + " days"; // TODO: Update the unit
+        holder.streakView.setText(currStreak);
         holder.frequencyView.setText(habits.get(position).getFrequency());
         holder.habitItemLayout.setOnClickListener(view -> launchHabitCentralAct(habits.get(position).getUuid()));
     }
