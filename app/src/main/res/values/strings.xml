@@ -75,6 +75,12 @@
     <string name="track_habit">Track Habits</string>
     <string name="streak">Current Streak</string>
     <string name="frequency">Frequency</string>
+    <string name="habit_name_hint">Habit Name</string>
+    <string name="freq_hint">How many</string>
+    <string name="freq_suffix">minutes per day</string>
+    <string name="save_habit">Save</string>
+    <string name="cancel_save">Cancel</string>
+    <string name="frequency_fab">Set your frequency</string>
 
     <string name="nav_item_1">Home</string>
     <string name="nav_item_2">Note</string>

@@ -19,8 +19,8 @@ import edu.northeastern.nowornever.R;
 
 public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecyclerViewAdapter.HabitViewHolder> {
 
-    private List<Habit> habits;
-    private Context context;
+    private final List<Habit> habits;
+    private final Context context;
 
     public HabitRecyclerViewAdapter(Context context, List<Habit> habits) {
         this.context = context;
@@ -40,7 +40,8 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecycler
         holder.habitTitleView.setText(habits.get(position).getHabitName());
         String currStreak = "Current streak: " + habits.get(position).getCurrStreak() + " days"; // TODO: Update the unit
         holder.streakView.setText(currStreak);
-        holder.frequencyView.setText(habits.get(position).getFrequency());
+        String frequency = habits.get(position).getFrequency() + " minutes per day";
+        holder.frequencyView.setText(frequency);
         holder.habitItemLayout.setOnClickListener(view -> launchHabitCentralAct(habits.get(position).getUuid()));
     }
 

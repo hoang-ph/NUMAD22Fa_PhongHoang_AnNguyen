@@ -19,11 +19,13 @@ public class Constants {
             SUCCESS_LOGIN = "Successfully logged in",
             SUCCESS_LOGOUT = "Successfully logged out",
             SUCCESS_SIGNUP = "Successfully signed up",
+            SUCCESS_ADD = "Successfully added new habit",
             INVALID_CREDENTIAL = "Either username doesn't exist or password doesn't match",
             RETRIEVAL_FAILURE = "Failed to retrieve data!",
             USER_EXISTS = "Username already exists, try again",
-            BLANK_NOTI = "Username/password cannot be blank",
-            HABIT_ID_KEY = "habitIdKey";
+            BLANK_NOTI = "Both fields cannot be blank",
+            HABIT_ID_KEY = "habitIdKey",
+            SERVER_ERROR = "Server error - fail to get existing data";
 
     // Reference here: https://developer.android.com/reference/android/R.drawable.html
     public static final Map<String, Integer> STICKER_RESOURCES = Map.of(
