@@ -98,7 +98,7 @@ public class HabitsListActivity extends AppCompatActivity {
 
     private void loadHabitsData() {
         habits.clear();
-        ref.addValueEventListener(new ValueEventListener() {
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
