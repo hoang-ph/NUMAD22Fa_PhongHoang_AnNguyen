@@ -33,10 +33,4 @@ public class Habit {
     public String getUuid() {
         return uuid;
     }
-
-    public String getCreatedDate() {
-        return createdDate;
-    }
-
-    // TODO: this class is important - design how to use this effectively
 }
