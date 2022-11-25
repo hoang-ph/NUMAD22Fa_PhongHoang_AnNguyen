@@ -21,11 +21,16 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import edu.northeastern.nowornever.R;
 
 public class HomeFragment extends Fragment {
+
+    private SimpleDateFormat CALENDAR_TITLE_FORMAT = new SimpleDateFormat("MMMM yyyy", Locale.getDefault());
 
     private String habitUuid, habitName, username;
     private long createdDate;
@@ -39,6 +44,9 @@ public class HomeFragment extends Fragment {
         TextView habitNameView = view.findViewById(R.id.habitNameView);
         CompactCalendarView compactCalendarView = (CompactCalendarView) view.findViewById(R.id.compactcalendar_view);
         compactCalendarView.setFirstDayOfWeek(Calendar.MONDAY);
+        compactCalendarView.setUseThreeLetterAbbreviation(true);
+        TextView calendarTitle = view.findViewById(R.id.calendarTitle);
+        calendarTitle.setText(CALENDAR_TITLE_FORMAT.format(new Date()));
 
         habitUuid = getArguments().getString(HABIT_ID_KEY);
         username = getArguments().getString(USERNAME_KEY);
@@ -47,13 +55,24 @@ public class HomeFragment extends Fragment {
             if (task.isSuccessful()) {
                 if (task.getResult().exists()) {
                     DataSnapshot ds = task.getResult();
-                    habitName = String.valueOf(ds.child("habitName").getValue());
+                    habitName = "Habit: " + ds.child("habitName").getValue();
                     habitNameView.setText(habitName);
                     String tempCreatedDate = String.valueOf(ds.child("createdDate").getValue());
                     createdDate = Long.parseLong(tempCreatedDate);
-                    Event event = new Event(Color.GREEN, createdDate);
+                    Event event = new Event(Color.RED, createdDate);
                     compactCalendarView.addEvent(event);
                 }
+            }
+        });
+
+        compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
+            @Override
+            public void onDayClick(Date dateClicked) {
+            }
+
+            @Override
+            public void onMonthScroll(Date firstDayOfNewMonth) {
+                calendarTitle.setText(CALENDAR_TITLE_FORMAT.format(firstDayOfNewMonth));
             }
         });
 
