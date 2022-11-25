@@ -27,6 +27,8 @@ public class Constants {
             HABIT_ID_KEY = "habitIdKey",
             SERVER_ERROR = "Server error - fail to get existing data";
 
+    public static final long ONE_DAY_IN_EPOCH = 86500000L;
+
     // Reference here: https://developer.android.com/reference/android/R.drawable.html
     public static final Map<String, Integer> STICKER_RESOURCES = Map.of(
             "Star", R.drawable.star,

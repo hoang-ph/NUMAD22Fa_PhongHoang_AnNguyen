@@ -2,6 +2,7 @@ package edu.northeastern.nowornever.habit;
 
 import static edu.northeastern.nowornever.utils.Constants.CHILD_HABIT;
 import static edu.northeastern.nowornever.utils.Constants.HABIT_ID_KEY;
+import static edu.northeastern.nowornever.utils.Constants.ONE_DAY_IN_EPOCH;
 import static edu.northeastern.nowornever.utils.Constants.ROOT_HABIT;
 import static edu.northeastern.nowornever.utils.Constants.USERNAME_KEY;
 
@@ -23,8 +24,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -37,6 +40,7 @@ public class HomeFragment extends Fragment {
 
     private String habitUuid, habitName, username;
     private List<String> dailyHabitCompletions;
+    TextView currStreakView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,6 +55,7 @@ public class HomeFragment extends Fragment {
         TextView calendarTitle = view.findViewById(R.id.calendarTitle);
         calendarTitle.setText(CALENDAR_TITLE_FORMAT.format(new Date()));
         CheckBox completionCheckBox = view.findViewById(R.id.comletionCheckBox);
+        currStreakView = view.findViewById(R.id.currStreakView);
 
         habitUuid = getArguments().getString(HABIT_ID_KEY);
         username = getArguments().getString(USERNAME_KEY);
@@ -71,6 +76,7 @@ public class HomeFragment extends Fragment {
                             Event event = new Event(Color.RED, createdDate);
                             compactCalendarView.addEvent(event);
                         }
+                        updateStreakView();
                     }
                 }
             }
@@ -92,6 +98,7 @@ public class HomeFragment extends Fragment {
                         }
                         dailyHabitCompletions.add(String.valueOf(epochDateClicked));
                         ref.child("dailyCompletion").setValue(dailyHabitCompletions);
+                        updateStreakView();
                     });
                 } else {
                     completionCheckBox.setChecked(true);
@@ -106,5 +113,29 @@ public class HomeFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void updateStreakView() {
+        String streak = "Current streak: " + getCurrStreak() + " days";
+        currStreakView.setText(streak);
+    }
+
+    private int getCurrStreak() {
+        if (dailyHabitCompletions == null) {
+            return 0;
+        }
+        dailyHabitCompletions.sort(Collections.reverseOrder());
+        int streak = 0;
+        long dateEpoch = Instant.now().toEpochMilli();
+        for (String item : dailyHabitCompletions) {
+            long itemEpoch = Long.parseLong(item);
+            if ((dateEpoch - itemEpoch) > ONE_DAY_IN_EPOCH) {
+                break;
+            } else {
+                streak += 1;
+                dateEpoch = itemEpoch;
+            }
+        }
+        return streak;
     }
 }
