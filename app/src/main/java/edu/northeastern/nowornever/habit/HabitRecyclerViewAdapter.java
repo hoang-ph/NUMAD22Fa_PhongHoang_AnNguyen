@@ -38,8 +38,8 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecycler
     @Override
     public void onBindViewHolder(@NonNull HabitViewHolder holder, int position) {
         holder.habitTitleView.setText(habits.get(position).getHabitName());
-        String currStreak = "Current streak: " + habits.get(position).getCurrStreak() + " days"; // TODO: Update the unit
-        holder.streakView.setText(currStreak);
+        String createdDate = "Created on " + habits.get(position).getCreatedDate();
+        holder.createdDateView.setText(createdDate);
         String frequency = habits.get(position).getFrequency() + " minutes per day";
         holder.frequencyView.setText(frequency);
         holder.habitItemLayout.setOnClickListener(view -> launchHabitCentralAct(habits.get(position).getUuid()));
@@ -53,13 +53,13 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecycler
     public static class HabitViewHolder extends RecyclerView.ViewHolder {
 
         private final ConstraintLayout habitItemLayout;
-        private final TextView habitTitleView, streakView, frequencyView;
+        private final TextView habitTitleView, createdDateView, frequencyView;
 
         public HabitViewHolder(@NonNull View itemView) {
             super(itemView);
             habitItemLayout = itemView.findViewById(R.id.habitItemLayout);
             habitTitleView = itemView.findViewById(R.id.habitTitleView);
-            streakView = itemView.findViewById(R.id.streakView);
+            createdDateView = itemView.findViewById(R.id.createdDateView);
             frequencyView = itemView.findViewById(R.id.frequencyView);
         }
     }

@@ -1,11 +1,12 @@
 package edu.northeastern.nowornever.habit;
 
-import java.time.Instant;
 import java.util.UUID;
+
+import edu.northeastern.nowornever.utils.Utils;
 
 public class Habit {
 
-    private String uuid, habitName, frequency, createdDate, currStreak;
+    private String uuid, habitName, frequency, createdDate;
 
     public Habit() {
     }
@@ -13,9 +14,8 @@ public class Habit {
     public Habit(String habitName, String frequency) {
         this.habitName = habitName;
         this.frequency = frequency;
-        this.currStreak = "0";
         this.uuid = UUID.randomUUID().toString();
-        this.createdDate = String.valueOf(Instant.now().toEpochMilli());
+        this.createdDate = Utils.simpleDate();
     }
 
     public String getHabitName() {
@@ -26,11 +26,11 @@ public class Habit {
         return frequency;
     }
 
-    public String getCurrStreak() {
-        return currStreak;
-    }
-
     public String getUuid() {
         return uuid;
+    }
+
+    public String getCreatedDate() {
+        return createdDate;
     }
 }
