@@ -15,6 +15,7 @@ public class Constants {
     public static final String
             ROOT_HABIT = "habitUsers",
             CHILD_HABIT = "habitsList",
+            CHILD_IMG_ID = "imageIdList",
             SHARED_PREF = "userPref",
             SUCCESS_LOGIN = "Successfully logged in",
             SUCCESS_LOGOUT = "Successfully logged out",
