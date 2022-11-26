@@ -91,4 +91,10 @@
     <string name="nav_item_4">Media</string>
     <string name="nav_item_5">Friend</string>
 
+    <!--- Media Fragment -->
+    <string name="upload_here">Preview + upload new image</string>
+    <string name="select_img">Select Image</string>
+    <string name="upload_img">Upload Image</string>
+    <string name="img_history">Your Images</string>
+
 </resources>
