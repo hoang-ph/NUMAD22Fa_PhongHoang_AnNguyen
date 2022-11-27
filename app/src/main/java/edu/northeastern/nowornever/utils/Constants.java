@@ -17,7 +17,6 @@ public class Constants {
     public static final String
             ROOT_HABIT = "habitUsers",
             CHILD_HABIT = "habitsList",
-            CHILD_IMG_ID = "imageIdList",
             SHARED_PREF = "userPref",
             SUCCESS_LOGIN = "Successfully logged in",
             SUCCESS_LOGOUT = "Successfully logged out",
@@ -39,7 +38,9 @@ public class Constants {
             UPLOAD = "Upload Image",
             LOADING = "Loading.....",
             SUCCESS_UPLOAD = "Successfully uploaded",
-            FAIL_UPLOAD = "Failed to upload image";
+            FAIL_UPLOAD = "Failed to upload image",
+            CHILD_HABIT_IMG = "HabitImagesList",
+            NO_IMG_NOTI = "An image has to be selected";
 
     // Reference here: https://developer.android.com/reference/android/R.drawable.html
     public static final Map<String, Integer> STICKER_RESOURCES = Map.of(
