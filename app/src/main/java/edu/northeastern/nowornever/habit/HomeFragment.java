@@ -1,7 +1,9 @@
 package edu.northeastern.nowornever.habit;
 
+import static edu.northeastern.nowornever.utils.Constants.CALENDAR_TITLE;
 import static edu.northeastern.nowornever.utils.Constants.CHILD_HABIT;
 import static edu.northeastern.nowornever.utils.Constants.HABIT_ID_KEY;
+import static edu.northeastern.nowornever.utils.Constants.MONTHLY_PERCENTAGE;
 import static edu.northeastern.nowornever.utils.Constants.ONE_DAY_IN_EPOCH;
 import static edu.northeastern.nowornever.utils.Constants.ROOT_HABIT;
 import static edu.northeastern.nowornever.utils.Constants.USERNAME_KEY;
@@ -25,6 +27,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -41,6 +45,7 @@ public class HomeFragment extends Fragment {
     private String habitUuid, habitName, username;
     private List<String> dailyHabitCompletions;
     TextView currStreakView;
+    CompactCalendarView compactCalendarView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,7 +54,7 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         TextView habitNameView = view.findViewById(R.id.habitNameView);
-        CompactCalendarView compactCalendarView = (CompactCalendarView) view.findViewById(R.id.compactcalendar_view);
+        compactCalendarView = (CompactCalendarView) view.findViewById(R.id.compactcalendar_view);
         compactCalendarView.setFirstDayOfWeek(Calendar.MONDAY);
         compactCalendarView.setUseThreeLetterAbbreviation(true);
         TextView calendarTitle = view.findViewById(R.id.calendarTitle);
@@ -77,10 +82,12 @@ public class HomeFragment extends Fragment {
                             compactCalendarView.addEvent(event);
                         }
                         updateStreakView();
+                        sendMonthlyCompletionToStatFragment(new Date());
                     }
                 }
             }
         });
+
 
         compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
@@ -99,6 +106,7 @@ public class HomeFragment extends Fragment {
                         dailyHabitCompletions.add(String.valueOf(epochDateClicked));
                         ref.child("dailyCompletion").setValue(dailyHabitCompletions);
                         updateStreakView();
+                        sendMonthlyCompletionToStatFragment(dateClicked);
                     });
                 } else {
                     completionCheckBox.setChecked(true);
@@ -109,6 +117,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onMonthScroll(Date firstDayOfNewMonth) {
                 calendarTitle.setText(CALENDAR_TITLE_FORMAT.format(firstDayOfNewMonth));
+                sendMonthlyCompletionToStatFragment(firstDayOfNewMonth);
             }
         });
 
@@ -137,5 +146,16 @@ public class HomeFragment extends Fragment {
             }
         }
         return streak;
+    }
+
+    private void sendMonthlyCompletionToStatFragment(Date date) {
+        int completedDays = compactCalendarView.getEventsForMonth(date).size();
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        int numDaysOfMonth = localDate.lengthOfMonth();
+        int percentage = (completedDays / numDaysOfMonth) * 100;
+        getArguments().putInt(MONTHLY_PERCENTAGE, percentage);
+
+        String calendarTitle = CALENDAR_TITLE_FORMAT.format(date);
+        getArguments().putString(CALENDAR_TITLE, calendarTitle);
     }
 }

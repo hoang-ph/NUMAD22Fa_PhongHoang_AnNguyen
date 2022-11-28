@@ -42,6 +42,11 @@ public class Constants {
             CHILD_HABIT_IMG = "HabitImagesList",
             NO_IMG_NOTI = "An image has to be selected";
 
+    // Stat Fragment
+    public static final String
+            CALENDAR_TITLE = "calendarTitle",
+            MONTHLY_PERCENTAGE = "monthPercentage";
+
     // Reference here: https://developer.android.com/reference/android/R.drawable.html
     public static final Map<String, Integer> STICKER_RESOURCES = Map.of(
             "Star", R.drawable.star,
