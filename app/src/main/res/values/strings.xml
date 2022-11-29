@@ -96,5 +96,6 @@
     <string name="select_img">Select Image</string>
     <string name="upload_img">Upload Image</string>
     <string name="img_history">Your Images</string>
+    <string name="add_a_new_habit">Add a new habit</string>
 
 </resources>
