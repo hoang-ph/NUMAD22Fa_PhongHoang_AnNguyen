@@ -27,7 +27,8 @@ public class Constants {
             USER_EXISTS = "Username already exists, try again",
             BLANK_NOTI = "Both fields cannot be blank",
             HABIT_ID_KEY = "habitIdKey",
-            SERVER_ERROR = "Server error - fail to get existing data";
+            SERVER_ERROR = "Server error - fail to get existing data",
+            CHILD_NOTE = "notesList";
 
     public static final long ONE_DAY_IN_EPOCH = 86500000L;
 

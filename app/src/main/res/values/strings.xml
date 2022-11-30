@@ -98,5 +98,7 @@
     <string name="img_history">Your Images</string>
     <string name="add_a_new_habit">Add a new habit</string>
     <string name="notes">Notes</string>
+    <string name="note_title">Note Title</string>
+    <string name="note_description">Note Description</string>
 
 </resources>
