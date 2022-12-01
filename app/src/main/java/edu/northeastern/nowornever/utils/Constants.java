@@ -28,7 +28,9 @@ public class Constants {
             BLANK_NOTI = "Both fields cannot be blank",
             HABIT_ID_KEY = "habitIdKey",
             SERVER_ERROR = "Server error - fail to get existing data",
-            CHILD_NOTE = "notesList";
+            CHILD_NOTE = "notesList",
+            NOTE_TITLE_KEY = "noteTitleKey",
+            NOTE_DESCRIPTION_KEY = "noteDescriptionKey";
 
     public static final long ONE_DAY_IN_EPOCH = 86500000L;
 

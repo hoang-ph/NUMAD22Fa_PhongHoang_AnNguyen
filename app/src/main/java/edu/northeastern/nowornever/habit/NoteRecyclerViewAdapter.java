@@ -1,6 +1,10 @@
 package edu.northeastern.nowornever.habit;
 
+import static edu.northeastern.nowornever.utils.Constants.NOTE_DESCRIPTION_KEY;
+import static edu.northeastern.nowornever.utils.Constants.NOTE_TITLE_KEY;
+
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +12,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -38,11 +45,11 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerVi
         String createdDate = "Created On " + notes.get(position).getCreatedDate();
         holder.noteCreatedDateView.setText(createdDate);
         String description = notes.get(position).getNoteDescription();
-        if (description.length() > 10) {
-            description = description.subSequence(0, 10) + "...";
+        if (description.length() > 30) {
+            description = description.subSequence(0, 30) + "...";
         }
         holder.noteDescriptionView.setText(description);
-        holder.noteItemLayout.setOnClickListener(view -> launchNoteSummary(notes.get(position).getUuid()));
+        holder.noteItemLayout.setOnClickListener(view -> launchNoteSummary(notes.get(position)));
     }
 
     @Override
@@ -64,7 +71,20 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerVi
         }
     }
 
-    private void launchNoteSummary(String noteUuid) {
+    private void launchNoteSummary(Note note) {
+        NoteSummaryFragment fragment = new NoteSummaryFragment();
+        Bundle storage = new Bundle();
+        storage.putString(NOTE_TITLE_KEY, note.getNoteName());
+        storage.putString(NOTE_DESCRIPTION_KEY, note.getNoteDescription());
+        fragment.setArguments(storage);
+        switchContent(fragment);
+    }
 
+    public void switchContent(Fragment fragment) {
+        if (context == null) return;
+        if (context instanceof HabitActivity) {
+            HabitActivity habitActivity = (HabitActivity) context;
+            habitActivity.switchContent(fragment);
+        }
     }
 }

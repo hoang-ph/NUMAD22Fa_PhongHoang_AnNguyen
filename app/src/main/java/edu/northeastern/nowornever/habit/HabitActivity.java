@@ -69,4 +69,11 @@ public class HabitActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
+    public void switchContent(Fragment fragment) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.habitFrameLayout, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
 }
