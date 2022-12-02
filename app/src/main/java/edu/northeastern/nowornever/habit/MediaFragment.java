@@ -14,7 +14,11 @@ import static edu.northeastern.nowornever.utils.Constants.USERNAME_KEY;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -23,10 +27,14 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +51,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,9 +61,7 @@ import edu.northeastern.nowornever.R;
 
 public class MediaFragment extends Fragment {
 
-    public static final int CAMERA_PERMISSION_CODE = 101;
-    public static final int CAMERA_REQUEST_CODE = 102;
-    public static final int GALLERY_REQUEST_CODE = 103;
+    public static final String TAG = "MediaFragment: ";
 
     private List<HabitImage> habitImages;
     private String username;
@@ -176,17 +184,57 @@ public class MediaFragment extends Fragment {
 
     private void takeAScreenshot() {
         cameraPermission.launch(Manifest.permission.CAMERA);
+        // Request for camera runtime permission
+//        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, 100);
+//        }
     }
+
+    public Uri getImageUri(Context context, Bitmap image) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), image, "Title", null);
+        return Uri.parse(path);
+    }
+
+    public String getRealPathFromURI(Uri uri) {
+        Cursor cursor = getContext().getContentResolver().query(uri, null,null,null,null);
+        cursor.moveToFirst();
+        int index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+        String realPath = cursor.getString(index);
+        cursor.close();
+        return realPath;
+    }
+
+    ActivityResultLauncher<Intent> takeAScreenshot = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        Bitmap photo = (Bitmap) data.getExtras().get("data");
+                        selectedImgView.setImageBitmap(photo);
+                        // Get the URI from the Bitmap
+                        Uri tempUri = getImageUri(getContext(), photo);
+                        imgUri = Uri.fromFile(new File(getRealPathFromURI(tempUri)));
+                        Log.d(TAG, "onActivityResult: " + imgUri.toString());
+                    }
+                }
+            });
 
     ActivityResultLauncher<String> cameraPermission = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(),
             result -> {
                 if (result) {
-                    Toast.makeText(getContext(), "Camera Permission Granted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Camera Permission Granted", Toast.LENGTH_SHORT);
+                    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    takeAScreenshot.launch(takePictureIntent);
                 } else {
-                    Toast.makeText(getContext(), "Camera Permission not Granted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Camera Permission Denied", Toast.LENGTH_SHORT);
                 }
-            }
-    );
+            });
+
+
 
 }
