@@ -100,5 +100,6 @@
     <string name="notes">Notes</string>
     <string name="note_title">Note Title</string>
     <string name="note_description">Note Description</string>
+    <string name="take_a_screenshot">Take a Screenshot</string>
 
 </resources>

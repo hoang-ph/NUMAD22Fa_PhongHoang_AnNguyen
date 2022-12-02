@@ -12,6 +12,7 @@ import static edu.northeastern.nowornever.utils.Constants.SUCCESS_UPLOAD;
 import static edu.northeastern.nowornever.utils.Constants.UPLOAD;
 import static edu.northeastern.nowornever.utils.Constants.USERNAME_KEY;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -50,6 +51,10 @@ import edu.northeastern.nowornever.R;
 
 public class MediaFragment extends Fragment {
 
+    public static final int CAMERA_PERMISSION_CODE = 101;
+    public static final int CAMERA_REQUEST_CODE = 102;
+    public static final int GALLERY_REQUEST_CODE = 103;
+
     private List<HabitImage> habitImages;
     private String username;
     private RecyclerView imgRecyclerView;
@@ -81,6 +86,9 @@ public class MediaFragment extends Fragment {
 
         uploadImageBtn = view.findViewById(R.id.uploadImageBtn);
         uploadImageBtn.setOnClickListener(v -> uploadImage());
+
+        Button takeAScreenshotBtn = view.findViewById(R.id.takeAScreenshotBtn);
+        takeAScreenshotBtn.setOnClickListener(v -> takeAScreenshot());
 
         databaseReference = FirebaseDatabase.getInstance().getReference().child(ROOT_HABIT).child(username).child(CHILD_HABIT).child(habitUuid).child(CHILD_HABIT_IMG);
         loadAllImages();
@@ -164,5 +172,21 @@ public class MediaFragment extends Fragment {
                     Toast.makeText(getContext(), FAIL_UPLOAD, Toast.LENGTH_SHORT).show();
                 });
     }
+
+
+    private void takeAScreenshot() {
+        cameraPermission.launch(Manifest.permission.CAMERA);
+    }
+
+    ActivityResultLauncher<String> cameraPermission = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(),
+            result -> {
+                if (result) {
+                    Toast.makeText(getContext(), "Camera Permission Granted", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "Camera Permission not Granted", Toast.LENGTH_SHORT).show();
+                }
+            }
+    );
 
 }
