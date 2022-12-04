@@ -13,6 +13,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +55,7 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         TextView habitNameView = view.findViewById(R.id.habitNameView);
-        compactCalendarView = (CompactCalendarView) view.findViewById(R.id.compactcalendar_view);
+        compactCalendarView = view.findViewById(R.id.compactcalendar_view);
         compactCalendarView.setFirstDayOfWeek(Calendar.MONDAY);
         compactCalendarView.setUseThreeLetterAbbreviation(true);
         TextView calendarTitle = view.findViewById(R.id.calendarTitle);
@@ -149,10 +150,11 @@ public class HomeFragment extends Fragment {
     }
 
     private void sendMonthlyCompletionToStatFragment(Date date) {
-        int completedDays = compactCalendarView.getEventsForMonth(date).size();
+        double completedDays = compactCalendarView.getEventsForMonth(date).size();
         LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        int numDaysOfMonth = localDate.lengthOfMonth();
-        int percentage = (completedDays / numDaysOfMonth) * 100;
+        double numDaysOfMonth = localDate.lengthOfMonth();
+        double tempPercentage = (completedDays / numDaysOfMonth) * 100;
+        int percentage = (int) Math.round(tempPercentage);
         getArguments().putInt(MONTHLY_PERCENTAGE, percentage);
 
         String calendarTitle = CALENDAR_TITLE_FORMAT.format(date);
