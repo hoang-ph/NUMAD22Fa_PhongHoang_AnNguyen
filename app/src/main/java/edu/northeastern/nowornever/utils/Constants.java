@@ -34,6 +34,9 @@ public class Constants {
 
     public static final long ONE_DAY_IN_EPOCH = 86500000L;
 
+    // Home Fragment
+    public static final String FUTURE_DATE_CHECKED_ERROR = "Can't complete future date";
+
     // Media Fragment
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE MMM dd yyyy", Locale.getDefault());
 

@@ -51,7 +51,7 @@
             app:compactCalendarBackgroundColor="@color/teal_200"
             app:compactCalendarTextColor="#fff"
             app:compactCalendarCurrentSelectedDayBackgroundColor="#E57373"
-            app:compactCalendarCurrentDayBackgroundColor="#B71C1C"
+            app:compactCalendarCurrentDayBackgroundColor="@color/purple_200"
             app:compactCalendarMultiEventIndicatorColor="#fff"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

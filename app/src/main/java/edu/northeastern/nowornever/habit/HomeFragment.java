@@ -2,6 +2,7 @@ package edu.northeastern.nowornever.habit;
 
 import static edu.northeastern.nowornever.utils.Constants.CALENDAR_TITLE;
 import static edu.northeastern.nowornever.utils.Constants.CHILD_HABIT;
+import static edu.northeastern.nowornever.utils.Constants.FUTURE_DATE_CHECKED_ERROR;
 import static edu.northeastern.nowornever.utils.Constants.HABIT_ID_KEY;
 import static edu.northeastern.nowornever.utils.Constants.MONTHLY_PERCENTAGE;
 import static edu.northeastern.nowornever.utils.Constants.ONE_DAY_IN_EPOCH;
@@ -13,12 +14,12 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
@@ -97,7 +98,14 @@ public class HomeFragment extends Fragment {
                     completionCheckBox.setChecked(false);
                     completionCheckBox.setEnabled(true);
                     completionCheckBox.setOnClickListener(v -> {
+                        long dateEpoch = Instant.now().toEpochMilli();
                         long epochDateClicked = dateClicked.toInstant().toEpochMilli();
+                        long diff = epochDateClicked - dateEpoch;
+                        if (diff >= 0) {
+                            Toast.makeText(getContext(), FUTURE_DATE_CHECKED_ERROR, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
                         compactCalendarView.addEvent(new Event(Color.RED, epochDateClicked));
                         completionCheckBox.setChecked(true);
                         completionCheckBox.setEnabled(false);
