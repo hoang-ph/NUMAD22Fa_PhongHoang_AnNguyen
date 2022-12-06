@@ -2,15 +2,18 @@ package edu.northeastern.nowornever.habit;
 
 import static edu.northeastern.nowornever.utils.Constants.BLANK_NOTI;
 import static edu.northeastern.nowornever.utils.Constants.CHILD_HABIT;
+import static edu.northeastern.nowornever.utils.Constants.DELETE_FAILURE;
 import static edu.northeastern.nowornever.utils.Constants.ROOT_HABIT;
 import static edu.northeastern.nowornever.utils.Constants.SERVER_ERROR;
 import static edu.northeastern.nowornever.utils.Constants.SHARED_PREF;
 import static edu.northeastern.nowornever.utils.Constants.SUCCESS_ADD;
+import static edu.northeastern.nowornever.utils.Constants.SUCCESS_DELETE;
 import static edu.northeastern.nowornever.utils.Constants.SUCCESS_LOGOUT;
 import static edu.northeastern.nowornever.utils.Constants.USERNAME_KEY;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -53,6 +56,7 @@ public class HabitsListActivity extends AppCompatActivity {
         TextView habitUsernameDisplay = findViewById(R.id.habitUsernameDisplay);
         habits = new ArrayList<>();
         habitsRecyclerView = findViewById(R.id.habitRecyclerView);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(habitsRecyclerView);
         HabitRecyclerViewAdapter adapter = new HabitRecyclerViewAdapter(this, habits);
         habitsRecyclerView.setAdapter(adapter);
         habitsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -127,4 +131,26 @@ public class HabitsListActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), SUCCESS_LOGOUT, Toast.LENGTH_SHORT).show();
         finish();
     }
+
+    ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+            Habit habit = habits.get(viewHolder.getAdapterPosition());
+            ref.child(habit.getUuid()).removeValue().addOnCompleteListener(task -> {
+                if (task.isSuccessful()){
+                    Toast.makeText(HabitsListActivity.this, SUCCESS_DELETE, Toast.LENGTH_SHORT).show();
+                    loadHabitsData();
+                } else {
+                    Toast.makeText(HabitsListActivity.this, DELETE_FAILURE, Toast.LENGTH_SHORT).show();
+                }
+
+            });
+
+        }
+    };
 }
