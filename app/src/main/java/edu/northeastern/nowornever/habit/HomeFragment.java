@@ -1,6 +1,8 @@
 package edu.northeastern.nowornever.habit;
 
 import static edu.northeastern.nowornever.utils.Constants.CALENDAR_TITLE;
+import static edu.northeastern.nowornever.utils.Constants.CALENDAR_TITLE_FORMAT;
+import static edu.northeastern.nowornever.utils.Constants.CHILD_COMPLETION;
 import static edu.northeastern.nowornever.utils.Constants.CHILD_HABIT;
 import static edu.northeastern.nowornever.utils.Constants.FUTURE_DATE_CHECKED_ERROR;
 import static edu.northeastern.nowornever.utils.Constants.HABIT_ID_KEY;
@@ -27,7 +29,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -36,13 +37,10 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import edu.northeastern.nowornever.R;
 
 public class HomeFragment extends Fragment {
-
-    private final SimpleDateFormat CALENDAR_TITLE_FORMAT = new SimpleDateFormat("MMMM yyyy", Locale.getDefault());
 
     private String habitUuid, habitName, username;
     private List<String> dailyHabitCompletions;
@@ -96,7 +94,6 @@ public class HomeFragment extends Fragment {
             public void onDayClick(Date dateClicked) {
                 if (compactCalendarView.getEvents(dateClicked).isEmpty()) {
                     completionCheckBox.setChecked(false);
-                    completionCheckBox.setEnabled(true);
                     completionCheckBox.setOnClickListener(v -> {
                         long dateEpoch = Instant.now().toEpochMilli();
                         long epochDateClicked = dateClicked.toInstant().toEpochMilli();
@@ -108,18 +105,25 @@ public class HomeFragment extends Fragment {
 
                         compactCalendarView.addEvent(new Event(Color.RED, epochDateClicked));
                         completionCheckBox.setChecked(true);
-                        completionCheckBox.setEnabled(false);
                         if (dailyHabitCompletions == null) {
                             dailyHabitCompletions = new ArrayList<>();
                         }
                         dailyHabitCompletions.add(String.valueOf(epochDateClicked));
-                        ref.child("dailyCompletion").setValue(dailyHabitCompletions);
+                        ref.child(CHILD_COMPLETION).setValue(dailyHabitCompletions);
                         updateStreakView();
                         sendMonthlyCompletionToStatFragment(dateClicked);
                     });
                 } else {
                     completionCheckBox.setChecked(true);
-                    completionCheckBox.setEnabled(false);
+                    completionCheckBox.setOnClickListener(v -> {
+                        long epochDateClicked = dateClicked.toInstant().toEpochMilli();
+                        compactCalendarView.removeEvent(new Event(Color.RED, epochDateClicked));
+                        completionCheckBox.setChecked(false);
+                        dailyHabitCompletions.remove(String.valueOf(epochDateClicked));
+                        ref.child(CHILD_COMPLETION).setValue(dailyHabitCompletions);
+                        updateStreakView();
+                        sendMonthlyCompletionToStatFragment(dateClicked);
+                    });
                 }
             }
 
