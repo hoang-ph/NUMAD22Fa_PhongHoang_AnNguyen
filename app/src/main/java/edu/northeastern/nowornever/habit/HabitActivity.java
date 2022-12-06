@@ -53,9 +53,6 @@ public class HabitActivity extends AppCompatActivity {
                 case R.id.mediaFrag:
                     displaySelectedFrag(new MediaFragment());
                     break;
-                case R.id.friendFrag:
-                    displaySelectedFrag(new FriendFragment());
-                    break;
             }
             return true;
         });

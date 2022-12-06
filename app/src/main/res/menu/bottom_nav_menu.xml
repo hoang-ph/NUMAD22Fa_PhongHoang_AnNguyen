@@ -13,7 +13,4 @@
     <item android:title="@string/nav_item_4"
         android:id="@+id/mediaFrag"
         android:icon="@drawable/media" />
-    <item android:title="@string/nav_item_5"
-        android:id="@+id/friendFrag"
-        android:icon="@drawable/friend" />
 </menu>
