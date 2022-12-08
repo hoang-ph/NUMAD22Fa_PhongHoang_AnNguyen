@@ -16,4 +16,8 @@ public class HabitUser {
         return this.username;
     }
 
+    public String getPassword() {
+        return this.password;
+    }
+
 }
