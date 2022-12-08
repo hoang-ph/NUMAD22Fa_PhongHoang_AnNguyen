@@ -3,10 +3,12 @@ package edu.northeastern.nowornever.habit;
 import static edu.northeastern.nowornever.utils.Constants.BLANK_NOTI;
 import static edu.northeastern.nowornever.utils.Constants.CHILD_HABIT;
 import static edu.northeastern.nowornever.utils.Constants.CHILD_NOTE;
+import static edu.northeastern.nowornever.utils.Constants.DELETE_FAILURE;
 import static edu.northeastern.nowornever.utils.Constants.HABIT_ID_KEY;
 import static edu.northeastern.nowornever.utils.Constants.ROOT_HABIT;
 import static edu.northeastern.nowornever.utils.Constants.SERVER_ERROR;
 import static edu.northeastern.nowornever.utils.Constants.SUCCESS_ADD;
+import static edu.northeastern.nowornever.utils.Constants.SUCCESS_DELETE;
 import static edu.northeastern.nowornever.utils.Constants.USERNAME_KEY;
 
 import android.app.Dialog;
@@ -14,6 +16,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,8 +41,6 @@ import edu.northeastern.nowornever.R;
 
 public class NoteFragment extends Fragment {
 
-    private static final String TAG = NoteFragment.class.getSimpleName();
-
     private DatabaseReference databaseReference;
     private RecyclerView notesRecyclerView;
     private List<Note> notes;
@@ -56,6 +57,8 @@ public class NoteFragment extends Fragment {
 
         notes = new ArrayList<>();
         notesRecyclerView = view.findViewById(R.id.noteRecyclerView);
+        new ItemTouchHelper(removeNoteSwipeLeft).attachToRecyclerView(notesRecyclerView);
+        new ItemTouchHelper(removeNoteSwipeRight).attachToRecyclerView(notesRecyclerView);
         NoteRecyclerViewAdapter adapter = new NoteRecyclerViewAdapter(getContext(), notes);
         notesRecyclerView.setAdapter(adapter);
         notesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -117,4 +120,44 @@ public class NoteFragment extends Fragment {
             }
         });
     }
+
+    ItemTouchHelper.SimpleCallback removeNoteSwipeRight = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+            Note note = notes.get(viewHolder.getAdapterPosition());
+            databaseReference.child(note.getUuid()).removeValue().addOnCompleteListener(task -> {
+                if (task.isSuccessful()){
+                    Toast.makeText(getContext(), SUCCESS_DELETE, Toast.LENGTH_SHORT).show();
+                    loadNotesData();
+                } else {
+                    Toast.makeText(getContext(), DELETE_FAILURE, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    };
+
+    ItemTouchHelper.SimpleCallback removeNoteSwipeLeft = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+            Note note = notes.get(viewHolder.getAdapterPosition());
+            databaseReference.child(note.getUuid()).removeValue().addOnCompleteListener(task -> {
+                if (task.isSuccessful()){
+                    Toast.makeText(getContext(), "Successfully deleted note", Toast.LENGTH_SHORT).show();
+                    loadNotesData();
+                } else {
+                    Toast.makeText(getContext(), "Failed to delete note", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    };
 }
