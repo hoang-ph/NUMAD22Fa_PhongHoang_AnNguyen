@@ -184,10 +184,6 @@ public class MediaFragment extends Fragment {
 
     private void takeAScreenshot() {
         cameraPermission.launch(Manifest.permission.CAMERA);
-        // Request for camera runtime permission
-//        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-//            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, 100);
-//        }
     }
 
     public Uri getImageUri(Context context, Bitmap image) {
@@ -234,7 +230,4 @@ public class MediaFragment extends Fragment {
                     Toast.makeText(getContext(), "Camera Permission Denied", Toast.LENGTH_SHORT);
                 }
             });
-
-
-
 }
