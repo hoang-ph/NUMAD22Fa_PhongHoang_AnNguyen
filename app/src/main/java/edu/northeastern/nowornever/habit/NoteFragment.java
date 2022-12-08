@@ -82,7 +82,7 @@ public class NoteFragment extends Fragment {
                     Toast.makeText(getContext(),BLANK_NOTI, Toast.LENGTH_SHORT).show();
                 } else {
                     dialog.dismiss();
-                    Note note = new Note(noteTitle, noteDescription);
+                    Note note = new Note(noteTitle, noteDescription, username, habitUuid);
                     databaseReference.child(note.getUuid()).setValue(note).addOnCompleteListener(task -> {
                        loadNotesData();
                        Toast.makeText(getContext(), SUCCESS_ADD, Toast.LENGTH_SHORT).show();

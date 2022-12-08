@@ -32,7 +32,10 @@ public class Constants {
             SERVER_ERROR = "Server error - fail to get existing data",
             CHILD_NOTE = "notesList",
             NOTE_TITLE_KEY = "noteTitleKey",
-            NOTE_DESCRIPTION_KEY = "noteDescriptionKey";
+            NOTE_DESCRIPTION_KEY = "noteDescriptionKey",
+            NOTE_USERNAME_KEY = "noteUsernameKey",
+            NOTE_HABIT_UUID_KEY = "noteHabitUuidKey",
+            NOTE_UUID_KEY = "NOTE_UUID_KEY";
 
     public static final long ONE_DAY_IN_EPOCH = 86500000L;
 

@@ -1,7 +1,10 @@
 package edu.northeastern.nowornever.habit;
 
 import static edu.northeastern.nowornever.utils.Constants.NOTE_DESCRIPTION_KEY;
+import static edu.northeastern.nowornever.utils.Constants.NOTE_HABIT_UUID_KEY;
 import static edu.northeastern.nowornever.utils.Constants.NOTE_TITLE_KEY;
+import static edu.northeastern.nowornever.utils.Constants.NOTE_USERNAME_KEY;
+import static edu.northeastern.nowornever.utils.Constants.NOTE_UUID_KEY;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -76,6 +79,9 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerVi
         Bundle storage = new Bundle();
         storage.putString(NOTE_TITLE_KEY, note.getNoteName());
         storage.putString(NOTE_DESCRIPTION_KEY, note.getNoteDescription());
+        storage.putString(NOTE_USERNAME_KEY, note.getUsername());
+        storage.putString(NOTE_HABIT_UUID_KEY, note.getHabitUuid());
+        storage.putString(NOTE_UUID_KEY, note.getUuid());
         fragment.setArguments(storage);
         switchContent(fragment);
     }

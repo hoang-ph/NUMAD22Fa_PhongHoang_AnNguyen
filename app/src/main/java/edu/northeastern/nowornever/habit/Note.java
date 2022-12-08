@@ -5,14 +5,16 @@ import java.util.UUID;
 import edu.northeastern.nowornever.utils.Utils;
 
 public class Note {
-    private String uuid, noteName, noteDescription, createdDate;
+    private String uuid, noteName, noteDescription, createdDate, username, habitUuid;
 
     public Note() {
     }
 
-    public Note(String noteName, String noteDescription) {
+    public Note(String noteName, String noteDescription, String username, String habitUuid) {
         this.noteName = noteName;
         this.noteDescription = noteDescription;
+        this.username = username;
+        this.habitUuid = habitUuid;
         this.uuid = UUID.randomUUID().toString();
         this.createdDate = Utils.simpleDate();
     }
@@ -31,5 +33,17 @@ public class Note {
 
     public String getCreatedDate() {
         return createdDate;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getHabitUuid() {
+        return habitUuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }
