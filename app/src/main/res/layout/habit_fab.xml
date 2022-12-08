@@ -10,8 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/habit_name_hint"
+        android:inputType="text"
+        android:textColorHint="#78909C"
         android:textSize="20sp"
-        android:inputType="text" />
+        android:importantForAutofill="no" />
 
     <TextView
         android:layout_width="match_parent"
@@ -32,8 +34,10 @@
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:hint="@string/freq_hint"
+            android:inputType="number"
+            android:textColorHint="#78909C"
             android:textSize="20sp"
-            android:inputType="number" />
+            android:importantForAutofill="no" />
 
         <TextView
             android:layout_width="match_parent"
