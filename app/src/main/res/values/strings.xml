@@ -100,7 +100,7 @@
     <string name="notes">Notes</string>
     <string name="note_title">Note Title</string>
     <string name="note_description">Note Description</string>
-    <string name="take_a_screenshot">Take a Screenshot</string>
+    <string name="take_image">Take Image</string>
     <string name="picture_to_be_uploaded">Picture to be uploaded</string>
 
 </resources>
